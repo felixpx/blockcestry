@@ -1,0 +1,84 @@
+/* tailwind.css */
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+/* family-tree.css */
+
+/* family-tree.css */
+
+/* Style for the family tree component container */
+/* family-tree.css */
+
+/* Style for the family tree component container */
+.family-tree-container {
+  display: flex;
+  justify-content: space-evenly;
+  font-family: Arial, sans-serif;
+}
+
+/* Style for each family member node */
+.family-member {
+  position: relative;
+  display: inline-block;
+  text-align: center;
+  margin: 1rem;
+}
+
+/* Style for the dotted line connectors */
+.line-connector {
+  position: absolute;
+  width: 1px;
+  background-color: #ccc;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -11;
+}
+
+.line-connector:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 100%;
+  border-left: 10px dotted #ccc;
+}
+
+/* Custom styling for the family member circles */
+.family-member .avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #4fd1c5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+/* Custom styling for the member names */
+.family-member p {
+  display: flex;
+  align-items: center;
+  margin: 2;
+  padding: 4px 8px;
+  background-color: #f7fafc;
+  border-radius: 5px;
+}
+
+/* Adjust margin for the nested generations */
+.family-member .children {
+  margin-top: 16px;
+  padding: 2px;
+}
+
+/* Add padding for the siblings in the same generation */
+.family-member .siblings {
+  padding-left: 32px;
+}
