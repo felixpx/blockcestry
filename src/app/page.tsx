@@ -1,21 +1,19 @@
 import Image from "next/image";
-import FamilyTree from "../components/FamilyTree";
+import Landing from "../components/Landing";
 import Header2 from "../components/Header2";
 
 export default function Home() {
   return (
     <div>
-      <Header2 />
-      <main className="flex min-h-screen flex-col w-full items-center justify-between p-24">
-        <div className="flex flex-col items-center justify-evenly w-full">
-          <h1>
-            Create your family tree and store files to share with your family
-            via filecoin.
-          </h1>
-          <FamilyTree />
+      {/* <div className="absolute top-0 flex flex-row items-center justify-center z-50">
+        <Header2 />
+      </div> */}
+      <main className="flex min-h-screen flex-col w-full items-center">
+        <div className="flex flex-col items-center w-full">
+          <Landing />
         </div>
 
-        <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
+        {/* <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
           <a
             href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
             className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
@@ -83,7 +81,7 @@ export default function Home() {
               Instantly deploy your Next.js site to a shareable URL with Vercel.
             </p>
           </a>
-        </div>
+        </div> */}
       </main>
     </div>
   );
