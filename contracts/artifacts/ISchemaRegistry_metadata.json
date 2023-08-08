@@ -1,0 +1,192 @@
+{
+	"compiler": {
+		"version": "0.8.18+commit.87f61d96"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "uid",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "registerer",
+						"type": "address"
+					}
+				],
+				"name": "Registered",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "uid",
+						"type": "bytes32"
+					}
+				],
+				"name": "getSchema",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "bytes32",
+								"name": "uid",
+								"type": "bytes32"
+							},
+							{
+								"internalType": "contract ISchemaResolver",
+								"name": "resolver",
+								"type": "address"
+							},
+							{
+								"internalType": "bool",
+								"name": "revocable",
+								"type": "bool"
+							},
+							{
+								"internalType": "string",
+								"name": "schema",
+								"type": "string"
+							}
+						],
+						"internalType": "struct SchemaRecord",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "schema",
+						"type": "string"
+					},
+					{
+						"internalType": "contract ISchemaResolver",
+						"name": "resolver",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "revocable",
+						"type": "bool"
+					}
+				],
+				"name": "register",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"events": {
+				"Registered(bytes32,address)": {
+					"params": {
+						"registerer": "The address of the account used to register the schema.",
+						"uid": "The schema UID."
+					}
+				}
+			},
+			"kind": "dev",
+			"methods": {
+				"getSchema(bytes32)": {
+					"params": {
+						"uid": "The UID of the schema to retrieve."
+					},
+					"returns": {
+						"_0": "The schema data members."
+					}
+				},
+				"register(string,address,bool)": {
+					"params": {
+						"resolver": "An optional schema resolver.",
+						"revocable": "Whether the schema allows revocations explicitly.",
+						"schema": "The schema data schema."
+					},
+					"returns": {
+						"_0": "The UID of the new schema."
+					}
+				}
+			},
+			"title": "ISchemaRegistry",
+			"version": 1
+		},
+		"userdoc": {
+			"events": {
+				"Registered(bytes32,address)": {
+					"notice": "Emitted when a new schema has been registered"
+				}
+			},
+			"kind": "user",
+			"methods": {
+				"getSchema(bytes32)": {
+					"notice": "Returns an existing schema by UID"
+				},
+				"register(string,address,bool)": {
+					"notice": "Submits and reserves a new schema"
+				}
+			},
+			"notice": "The global schema registry interface.",
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/ISchemaRegistry.sol": "ISchemaRegistry"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/Common.sol": {
+			"keccak256": "0xd8e7adef9c8f0ae6d1cc70cc600b0a8af49b4bc28e2683626f7ae74c80d948e7",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://34cfc9d51bff93f170c9f1e26454715c910999425343be3192e9dc6dafc1cd93",
+				"dweb:/ipfs/QmW9GCkxCjmwbMLUrSimTmzrRxoGcSfUMTj2FkVFALD81Q"
+			]
+		},
+		"contracts/ISchemaRegistry.sol": {
+			"keccak256": "0x6bd99597a5b301701cd5ea4ee21f2e3dca7f901809adbcbafa8edb5eebe9779f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://9dddae36148dd8f89a26a256f1d0e6aa239e53b780c85b23d68f41db552e21aa",
+				"dweb:/ipfs/QmdxKu2iY7KaTqnV1rCsodXSU2YNRLdmGwmS4n5rRqD2rf"
+			]
+		},
+		"contracts/ISchemaResolver.sol": {
+			"keccak256": "0xe06e6960f2ea2939628c5e95fe5f0a36962cfae22576d4e94c7bccd01da118f7",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://53cadea585518d5dbc102ed59d93295cdf514d894e5b845fe2314eac6e7499cf",
+				"dweb:/ipfs/QmUg8A17vrnt2k6J8jSJkifWT5MAn4246HpFz2CmNa94mo"
+			]
+		}
+	},
+	"version": 1
+}

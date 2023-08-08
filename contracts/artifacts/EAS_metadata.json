@@ -1,0 +1,1548 @@
+{
+	"compiler": {
+		"version": "0.8.18+commit.87f61d96"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "contract ISchemaRegistry",
+						"name": "registry",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"inputs": [],
+				"name": "AccessDenied",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "AlreadyRevoked",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "AlreadyRevokedOffchain",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "AlreadyTimestamped",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "InsufficientValue",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "InvalidAttestation",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "InvalidAttestations",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "InvalidExpirationTime",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "InvalidLength",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "InvalidOffset",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "InvalidRegistry",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "InvalidRevocation",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "InvalidRevocations",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "InvalidSchema",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "InvalidShortString",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "InvalidSignature",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "InvalidVerifier",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "Irrevocable",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "NotFound",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "NotPayable",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "str",
+						"type": "string"
+					}
+				],
+				"name": "StringTooLong",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "WrongSchema",
+				"type": "error"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "recipient",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "attester",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes32",
+						"name": "uid",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "schema",
+						"type": "bytes32"
+					}
+				],
+				"name": "Attested",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [],
+				"name": "EIP712DomainChanged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "recipient",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "attester",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes32",
+						"name": "uid",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "schema",
+						"type": "bytes32"
+					}
+				],
+				"name": "Revoked",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "revoker",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "data",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "uint64",
+						"name": "timestamp",
+						"type": "uint64"
+					}
+				],
+				"name": "RevokedOffchain",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "data",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "uint64",
+						"name": "timestamp",
+						"type": "uint64"
+					}
+				],
+				"name": "Timestamped",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"components": [
+							{
+								"internalType": "bytes32",
+								"name": "schema",
+								"type": "bytes32"
+							},
+							{
+								"components": [
+									{
+										"internalType": "address",
+										"name": "recipient",
+										"type": "address"
+									},
+									{
+										"internalType": "uint64",
+										"name": "expirationTime",
+										"type": "uint64"
+									},
+									{
+										"internalType": "bool",
+										"name": "revocable",
+										"type": "bool"
+									},
+									{
+										"internalType": "bytes32",
+										"name": "refUID",
+										"type": "bytes32"
+									},
+									{
+										"internalType": "bytes",
+										"name": "data",
+										"type": "bytes"
+									},
+									{
+										"internalType": "uint256",
+										"name": "value",
+										"type": "uint256"
+									}
+								],
+								"internalType": "struct AttestationRequestData",
+								"name": "data",
+								"type": "tuple"
+							}
+						],
+						"internalType": "struct AttestationRequest",
+						"name": "request",
+						"type": "tuple"
+					}
+				],
+				"name": "attest",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"components": [
+							{
+								"internalType": "bytes32",
+								"name": "schema",
+								"type": "bytes32"
+							},
+							{
+								"components": [
+									{
+										"internalType": "address",
+										"name": "recipient",
+										"type": "address"
+									},
+									{
+										"internalType": "uint64",
+										"name": "expirationTime",
+										"type": "uint64"
+									},
+									{
+										"internalType": "bool",
+										"name": "revocable",
+										"type": "bool"
+									},
+									{
+										"internalType": "bytes32",
+										"name": "refUID",
+										"type": "bytes32"
+									},
+									{
+										"internalType": "bytes",
+										"name": "data",
+										"type": "bytes"
+									},
+									{
+										"internalType": "uint256",
+										"name": "value",
+										"type": "uint256"
+									}
+								],
+								"internalType": "struct AttestationRequestData",
+								"name": "data",
+								"type": "tuple"
+							},
+							{
+								"components": [
+									{
+										"internalType": "uint8",
+										"name": "v",
+										"type": "uint8"
+									},
+									{
+										"internalType": "bytes32",
+										"name": "r",
+										"type": "bytes32"
+									},
+									{
+										"internalType": "bytes32",
+										"name": "s",
+										"type": "bytes32"
+									}
+								],
+								"internalType": "struct EIP712Signature",
+								"name": "signature",
+								"type": "tuple"
+							},
+							{
+								"internalType": "address",
+								"name": "attester",
+								"type": "address"
+							}
+						],
+						"internalType": "struct DelegatedAttestationRequest",
+						"name": "delegatedRequest",
+						"type": "tuple"
+					}
+				],
+				"name": "attestByDelegation",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "eip712Domain",
+				"outputs": [
+					{
+						"internalType": "bytes1",
+						"name": "fields",
+						"type": "bytes1"
+					},
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "version",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "chainId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "verifyingContract",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "salt",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "extensions",
+						"type": "uint256[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getAttestTypeHash",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "uid",
+						"type": "bytes32"
+					}
+				],
+				"name": "getAttestation",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "bytes32",
+								"name": "uid",
+								"type": "bytes32"
+							},
+							{
+								"internalType": "bytes32",
+								"name": "schema",
+								"type": "bytes32"
+							},
+							{
+								"internalType": "uint64",
+								"name": "time",
+								"type": "uint64"
+							},
+							{
+								"internalType": "uint64",
+								"name": "expirationTime",
+								"type": "uint64"
+							},
+							{
+								"internalType": "uint64",
+								"name": "revocationTime",
+								"type": "uint64"
+							},
+							{
+								"internalType": "bytes32",
+								"name": "refUID",
+								"type": "bytes32"
+							},
+							{
+								"internalType": "address",
+								"name": "recipient",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "attester",
+								"type": "address"
+							},
+							{
+								"internalType": "bool",
+								"name": "revocable",
+								"type": "bool"
+							},
+							{
+								"internalType": "bytes",
+								"name": "data",
+								"type": "bytes"
+							}
+						],
+						"internalType": "struct Attestation",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getDomainSeparator",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getName",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "getNonce",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "revoker",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "data",
+						"type": "bytes32"
+					}
+				],
+				"name": "getRevokeOffchain",
+				"outputs": [
+					{
+						"internalType": "uint64",
+						"name": "",
+						"type": "uint64"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getRevokeTypeHash",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getSchemaRegistry",
+				"outputs": [
+					{
+						"internalType": "contract ISchemaRegistry",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "data",
+						"type": "bytes32"
+					}
+				],
+				"name": "getTimestamp",
+				"outputs": [
+					{
+						"internalType": "uint64",
+						"name": "",
+						"type": "uint64"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "uid",
+						"type": "bytes32"
+					}
+				],
+				"name": "isAttestationValid",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"components": [
+							{
+								"internalType": "bytes32",
+								"name": "schema",
+								"type": "bytes32"
+							},
+							{
+								"components": [
+									{
+										"internalType": "address",
+										"name": "recipient",
+										"type": "address"
+									},
+									{
+										"internalType": "uint64",
+										"name": "expirationTime",
+										"type": "uint64"
+									},
+									{
+										"internalType": "bool",
+										"name": "revocable",
+										"type": "bool"
+									},
+									{
+										"internalType": "bytes32",
+										"name": "refUID",
+										"type": "bytes32"
+									},
+									{
+										"internalType": "bytes",
+										"name": "data",
+										"type": "bytes"
+									},
+									{
+										"internalType": "uint256",
+										"name": "value",
+										"type": "uint256"
+									}
+								],
+								"internalType": "struct AttestationRequestData[]",
+								"name": "data",
+								"type": "tuple[]"
+							}
+						],
+						"internalType": "struct MultiAttestationRequest[]",
+						"name": "multiRequests",
+						"type": "tuple[]"
+					}
+				],
+				"name": "multiAttest",
+				"outputs": [
+					{
+						"internalType": "bytes32[]",
+						"name": "",
+						"type": "bytes32[]"
+					}
+				],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"components": [
+							{
+								"internalType": "bytes32",
+								"name": "schema",
+								"type": "bytes32"
+							},
+							{
+								"components": [
+									{
+										"internalType": "address",
+										"name": "recipient",
+										"type": "address"
+									},
+									{
+										"internalType": "uint64",
+										"name": "expirationTime",
+										"type": "uint64"
+									},
+									{
+										"internalType": "bool",
+										"name": "revocable",
+										"type": "bool"
+									},
+									{
+										"internalType": "bytes32",
+										"name": "refUID",
+										"type": "bytes32"
+									},
+									{
+										"internalType": "bytes",
+										"name": "data",
+										"type": "bytes"
+									},
+									{
+										"internalType": "uint256",
+										"name": "value",
+										"type": "uint256"
+									}
+								],
+								"internalType": "struct AttestationRequestData[]",
+								"name": "data",
+								"type": "tuple[]"
+							},
+							{
+								"components": [
+									{
+										"internalType": "uint8",
+										"name": "v",
+										"type": "uint8"
+									},
+									{
+										"internalType": "bytes32",
+										"name": "r",
+										"type": "bytes32"
+									},
+									{
+										"internalType": "bytes32",
+										"name": "s",
+										"type": "bytes32"
+									}
+								],
+								"internalType": "struct EIP712Signature[]",
+								"name": "signatures",
+								"type": "tuple[]"
+							},
+							{
+								"internalType": "address",
+								"name": "attester",
+								"type": "address"
+							}
+						],
+						"internalType": "struct MultiDelegatedAttestationRequest[]",
+						"name": "multiDelegatedRequests",
+						"type": "tuple[]"
+					}
+				],
+				"name": "multiAttestByDelegation",
+				"outputs": [
+					{
+						"internalType": "bytes32[]",
+						"name": "",
+						"type": "bytes32[]"
+					}
+				],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"components": [
+							{
+								"internalType": "bytes32",
+								"name": "schema",
+								"type": "bytes32"
+							},
+							{
+								"components": [
+									{
+										"internalType": "bytes32",
+										"name": "uid",
+										"type": "bytes32"
+									},
+									{
+										"internalType": "uint256",
+										"name": "value",
+										"type": "uint256"
+									}
+								],
+								"internalType": "struct RevocationRequestData[]",
+								"name": "data",
+								"type": "tuple[]"
+							}
+						],
+						"internalType": "struct MultiRevocationRequest[]",
+						"name": "multiRequests",
+						"type": "tuple[]"
+					}
+				],
+				"name": "multiRevoke",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"components": [
+							{
+								"internalType": "bytes32",
+								"name": "schema",
+								"type": "bytes32"
+							},
+							{
+								"components": [
+									{
+										"internalType": "bytes32",
+										"name": "uid",
+										"type": "bytes32"
+									},
+									{
+										"internalType": "uint256",
+										"name": "value",
+										"type": "uint256"
+									}
+								],
+								"internalType": "struct RevocationRequestData[]",
+								"name": "data",
+								"type": "tuple[]"
+							},
+							{
+								"components": [
+									{
+										"internalType": "uint8",
+										"name": "v",
+										"type": "uint8"
+									},
+									{
+										"internalType": "bytes32",
+										"name": "r",
+										"type": "bytes32"
+									},
+									{
+										"internalType": "bytes32",
+										"name": "s",
+										"type": "bytes32"
+									}
+								],
+								"internalType": "struct EIP712Signature[]",
+								"name": "signatures",
+								"type": "tuple[]"
+							},
+							{
+								"internalType": "address",
+								"name": "revoker",
+								"type": "address"
+							}
+						],
+						"internalType": "struct MultiDelegatedRevocationRequest[]",
+						"name": "multiDelegatedRequests",
+						"type": "tuple[]"
+					}
+				],
+				"name": "multiRevokeByDelegation",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32[]",
+						"name": "data",
+						"type": "bytes32[]"
+					}
+				],
+				"name": "multiRevokeOffchain",
+				"outputs": [
+					{
+						"internalType": "uint64",
+						"name": "",
+						"type": "uint64"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32[]",
+						"name": "data",
+						"type": "bytes32[]"
+					}
+				],
+				"name": "multiTimestamp",
+				"outputs": [
+					{
+						"internalType": "uint64",
+						"name": "",
+						"type": "uint64"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"components": [
+							{
+								"internalType": "bytes32",
+								"name": "schema",
+								"type": "bytes32"
+							},
+							{
+								"components": [
+									{
+										"internalType": "bytes32",
+										"name": "uid",
+										"type": "bytes32"
+									},
+									{
+										"internalType": "uint256",
+										"name": "value",
+										"type": "uint256"
+									}
+								],
+								"internalType": "struct RevocationRequestData",
+								"name": "data",
+								"type": "tuple"
+							}
+						],
+						"internalType": "struct RevocationRequest",
+						"name": "request",
+						"type": "tuple"
+					}
+				],
+				"name": "revoke",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"components": [
+							{
+								"internalType": "bytes32",
+								"name": "schema",
+								"type": "bytes32"
+							},
+							{
+								"components": [
+									{
+										"internalType": "bytes32",
+										"name": "uid",
+										"type": "bytes32"
+									},
+									{
+										"internalType": "uint256",
+										"name": "value",
+										"type": "uint256"
+									}
+								],
+								"internalType": "struct RevocationRequestData",
+								"name": "data",
+								"type": "tuple"
+							},
+							{
+								"components": [
+									{
+										"internalType": "uint8",
+										"name": "v",
+										"type": "uint8"
+									},
+									{
+										"internalType": "bytes32",
+										"name": "r",
+										"type": "bytes32"
+									},
+									{
+										"internalType": "bytes32",
+										"name": "s",
+										"type": "bytes32"
+									}
+								],
+								"internalType": "struct EIP712Signature",
+								"name": "signature",
+								"type": "tuple"
+							},
+							{
+								"internalType": "address",
+								"name": "revoker",
+								"type": "address"
+							}
+						],
+						"internalType": "struct DelegatedRevocationRequest",
+						"name": "delegatedRequest",
+						"type": "tuple"
+					}
+				],
+				"name": "revokeByDelegation",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "data",
+						"type": "bytes32"
+					}
+				],
+				"name": "revokeOffchain",
+				"outputs": [
+					{
+						"internalType": "uint64",
+						"name": "",
+						"type": "uint64"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "data",
+						"type": "bytes32"
+					}
+				],
+				"name": "timestamp",
+				"outputs": [
+					{
+						"internalType": "uint64",
+						"name": "",
+						"type": "uint64"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "version",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"events": {
+				"Attested(address,address,bytes32,bytes32)": {
+					"params": {
+						"attester": "The attesting account.",
+						"recipient": "The recipient of the attestation.",
+						"schema": "The UID of the schema.",
+						"uid": "The UID the revoked attestation."
+					}
+				},
+				"EIP712DomainChanged()": {
+					"details": "MAY be emitted to signal that the domain could have changed."
+				},
+				"Revoked(address,address,bytes32,bytes32)": {
+					"params": {
+						"attester": "The attesting account.",
+						"recipient": "The recipient of the attestation.",
+						"schema": "The UID of the schema.",
+						"uid": "The UID the revoked attestation."
+					}
+				},
+				"RevokedOffchain(address,bytes32,uint64)": {
+					"params": {
+						"data": "The data.",
+						"revoker": "The address of the revoker.",
+						"timestamp": "The timestamp."
+					}
+				},
+				"Timestamped(bytes32,uint64)": {
+					"params": {
+						"data": "The data.",
+						"timestamp": "The timestamp."
+					}
+				}
+			},
+			"kind": "dev",
+			"methods": {
+				"attest((bytes32,(address,uint64,bool,bytes32,bytes,uint256)))": {
+					"params": {
+						"request": "The arguments of the attestation request."
+					},
+					"returns": {
+						"_0": "The UID of the new attestation. Example:     attest({         schema: \"0facc36681cbe2456019c1b0d1e7bedd6d1d40f6f324bf3dd3a4cef2999200a0\",         data: {             recipient: \"0xdEADBeAFdeAdbEafdeadbeafDeAdbEAFdeadbeaf\",             expirationTime: 0,             revocable: true,             refUID: \"0x0000000000000000000000000000000000000000000000000000000000000000\",             data: \"0xF00D\",             value: 0         }     })"
+					}
+				},
+				"attestByDelegation((bytes32,(address,uint64,bool,bytes32,bytes,uint256),(uint8,bytes32,bytes32),address))": {
+					"params": {
+						"delegatedRequest": "The arguments of the delegated attestation request."
+					},
+					"returns": {
+						"_0": "The UID of the new attestation. Example:     attestByDelegation({         schema: '0x8e72f5bc0a8d4be6aa98360baa889040c50a0e51f32dbf0baa5199bd93472ebc',         data: {             recipient: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',             expirationTime: 1673891048,             revocable: true,             refUID: '0x0000000000000000000000000000000000000000000000000000000000000000',             data: '0x1234',             value: 0         },         signature: {             v: 28,             r: '0x148c...b25b',             s: '0x5a72...be22'         },         attester: '0xc5E8740aD971409492b1A63Db8d83025e0Fc427e'     })"
+					}
+				},
+				"constructor": {
+					"params": {
+						"registry": "The address of the global schema registry."
+					}
+				},
+				"eip712Domain()": {
+					"details": "See {EIP-5267}. _Available since v4.9._"
+				},
+				"getAttestTypeHash()": {
+					"returns": {
+						"_0": "The EIP712 type hash for the attest function."
+					}
+				},
+				"getAttestation(bytes32)": {
+					"params": {
+						"uid": "The UID of the attestation to retrieve."
+					},
+					"returns": {
+						"_0": "The attestation data members."
+					}
+				},
+				"getDomainSeparator()": {
+					"returns": {
+						"_0": "The domain separator used in the encoding of the signatures for attest, and revoke."
+					}
+				},
+				"getName()": {
+					"returns": {
+						"_0": "The EIP712 name."
+					}
+				},
+				"getNonce(address)": {
+					"params": {
+						"account": "The requested account."
+					},
+					"returns": {
+						"_0": "The current nonce."
+					}
+				},
+				"getRevokeOffchain(address,bytes32)": {
+					"params": {
+						"data": "The data to query."
+					},
+					"returns": {
+						"_0": "The timestamp the data was timestamped with."
+					}
+				},
+				"getRevokeTypeHash()": {
+					"returns": {
+						"_0": "The EIP712 type hash for the revoke function."
+					}
+				},
+				"getSchemaRegistry()": {
+					"returns": {
+						"_0": "The address of the global schema registry."
+					}
+				},
+				"getTimestamp(bytes32)": {
+					"params": {
+						"data": "The data to query."
+					},
+					"returns": {
+						"_0": "The timestamp the data was timestamped with."
+					}
+				},
+				"isAttestationValid(bytes32)": {
+					"params": {
+						"uid": "The UID of the attestation to retrieve."
+					},
+					"returns": {
+						"_0": "Whether an attestation exists."
+					}
+				},
+				"multiAttest((bytes32,(address,uint64,bool,bytes32,bytes,uint256)[])[])": {
+					"params": {
+						"multiRequests": "The arguments of the multi attestation requests. The requests should be grouped by distinct     schema ids to benefit from the best batching optimization."
+					},
+					"returns": {
+						"_0": "The UIDs of the new attestations. Example:     multiAttest([{         schema: '0x33e9094830a5cba5554d1954310e4fbed2ef5f859ec1404619adea4207f391fd',         data: [{             recipient: '0xdEADBeAFdeAdbEafdeadbeafDeAdbEAFdeadbeaf',             expirationTime: 1673891048,             revocable: true,             refUID: '0x0000000000000000000000000000000000000000000000000000000000000000',             data: '0x1234',             value: 1000         },         {             recipient: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',             expirationTime: 0,             revocable: false,             refUID: '0x480df4a039efc31b11bfdf491b383ca138b6bde160988222a2a3509c02cee174',             data: '0x00',             value: 0         }],     },     {         schema: '0x5ac273ce41e3c8bfa383efe7c03e54c5f0bff29c9f11ef6ffa930fc84ca32425',         data: [{             recipient: '0xdEADBeAFdeAdbEafdeadbeafDeAdbEAFdeadbeaf',             expirationTime: 0,             revocable: true,             refUID: '0x75bf2ed8dca25a8190c50c52db136664de25b2449535839008ccfdab469b214f',             data: '0x12345678',             value: 0         },     }])"
+					}
+				},
+				"multiAttestByDelegation((bytes32,(address,uint64,bool,bytes32,bytes,uint256)[],(uint8,bytes32,bytes32)[],address)[])": {
+					"params": {
+						"multiDelegatedRequests": "The arguments of the delegated multi attestation requests. The requests should be     grouped by distinct schema ids to benefit from the best batching optimization."
+					},
+					"returns": {
+						"_0": "The UIDs of the new attestations. Example:     multiAttestByDelegation([{         schema: '0x8e72f5bc0a8d4be6aa98360baa889040c50a0e51f32dbf0baa5199bd93472ebc',         data: [{             recipient: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',             expirationTime: 1673891048,             revocable: true,             refUID: '0x0000000000000000000000000000000000000000000000000000000000000000',             data: '0x1234',             value: 0         },         {             recipient: '0xdEADBeAFdeAdbEafdeadbeafDeAdbEAFdeadbeaf',             expirationTime: 0,             revocable: false,             refUID: '0x0000000000000000000000000000000000000000000000000000000000000000',             data: '0x00',             value: 0         }],         signatures: [{             v: 28,             r: '0x148c...b25b',             s: '0x5a72...be22'         },         {             v: 28,             r: '0x487s...67bb',             s: '0x12ad...2366'         }],         attester: '0x1D86495b2A7B524D747d2839b3C645Bed32e8CF4'     }])"
+					}
+				},
+				"multiRevoke((bytes32,(bytes32,uint256)[])[])": {
+					"params": {
+						"multiRequests": "The arguments of the multi revocation requests. The requests should be grouped by distinct     schema ids to benefit from the best batching optimization. Example:     multiRevoke([{         schema: '0x8e72f5bc0a8d4be6aa98360baa889040c50a0e51f32dbf0baa5199bd93472ebc',         data: [{             uid: '0x211296a1ca0d7f9f2cfebf0daaa575bea9b20e968d81aef4e743d699c6ac4b25',             value: 1000         },         {             uid: '0xe160ac1bd3606a287b4d53d5d1d6da5895f65b4b4bab6d93aaf5046e48167ade',             value: 0         }],     },     {         schema: '0x5ac273ce41e3c8bfa383efe7c03e54c5f0bff29c9f11ef6ffa930fc84ca32425',         data: [{             uid: '0x053d42abce1fd7c8fcddfae21845ad34dae287b2c326220b03ba241bc5a8f019',             value: 0         },     }])"
+					}
+				},
+				"multiRevokeByDelegation((bytes32,(bytes32,uint256)[],(uint8,bytes32,bytes32)[],address)[])": {
+					"params": {
+						"multiDelegatedRequests": "The arguments of the delegated multi revocation attestation requests. The requests     should be grouped by distinct schema ids to benefit from the best batching optimization. Example:     multiRevokeByDelegation([{         schema: '0x8e72f5bc0a8d4be6aa98360baa889040c50a0e51f32dbf0baa5199bd93472ebc',         data: [{             uid: '0x211296a1ca0d7f9f2cfebf0daaa575bea9b20e968d81aef4e743d699c6ac4b25',             value: 1000         },         {             uid: '0xe160ac1bd3606a287b4d53d5d1d6da5895f65b4b4bab6d93aaf5046e48167ade',             value: 0         }],         signatures: [{             v: 28,             r: '0x148c...b25b',             s: '0x5a72...be22'         },         {             v: 28,             r: '0x487s...67bb',             s: '0x12ad...2366'         }],         revoker: '0x244934dd3e31bE2c81f84ECf0b3E6329F5381992'     }])"
+					}
+				},
+				"multiRevokeOffchain(bytes32[])": {
+					"params": {
+						"data": "The data to timestamp."
+					},
+					"returns": {
+						"_0": "The timestamp the data was revoked with."
+					}
+				},
+				"multiTimestamp(bytes32[])": {
+					"params": {
+						"data": "The data to timestamp."
+					},
+					"returns": {
+						"_0": "The timestamp the data was timestamped with."
+					}
+				},
+				"revoke((bytes32,(bytes32,uint256)))": {
+					"params": {
+						"request": "The arguments of the revocation request. Example:     revoke({         schema: '0x8e72f5bc0a8d4be6aa98360baa889040c50a0e51f32dbf0baa5199bd93472ebc',         data: {             uid: '0x101032e487642ee04ee17049f99a70590c735b8614079fc9275f9dd57c00966d',             value: 0         }     })"
+					}
+				},
+				"revokeByDelegation((bytes32,(bytes32,uint256),(uint8,bytes32,bytes32),address))": {
+					"params": {
+						"delegatedRequest": "The arguments of the delegated revocation request. Example:     revokeByDelegation({         schema: '0x8e72f5bc0a8d4be6aa98360baa889040c50a0e51f32dbf0baa5199bd93472ebc',         data: {             uid: '0xcbbc12102578c642a0f7b34fe7111e41afa25683b6cd7b5a14caf90fa14d24ba',             value: 0         },         signature: {             v: 27,             r: '0xb593...7142',             s: '0x0f5b...2cce'         },         revoker: '0x244934dd3e31bE2c81f84ECf0b3E6329F5381992'     })"
+					}
+				},
+				"revokeOffchain(bytes32)": {
+					"params": {
+						"data": "The data to timestamp."
+					},
+					"returns": {
+						"_0": "The timestamp the data was revoked with."
+					}
+				},
+				"timestamp(bytes32)": {
+					"params": {
+						"data": "The data to timestamp."
+					},
+					"returns": {
+						"_0": "The timestamp the data was timestamped with."
+					}
+				},
+				"version()": {
+					"returns": {
+						"_0": "Semver contract version as a string."
+					}
+				}
+			},
+			"title": "EAS",
+			"version": 1
+		},
+		"userdoc": {
+			"events": {
+				"Attested(address,address,bytes32,bytes32)": {
+					"notice": "Emitted when an attestation has been made."
+				},
+				"Revoked(address,address,bytes32,bytes32)": {
+					"notice": "Emitted when an attestation has been revoked."
+				},
+				"RevokedOffchain(address,bytes32,uint64)": {
+					"notice": "Emitted when a data has been revoked."
+				},
+				"Timestamped(bytes32,uint64)": {
+					"notice": "Emitted when a data has been timestamped."
+				}
+			},
+			"kind": "user",
+			"methods": {
+				"attest((bytes32,(address,uint64,bool,bytes32,bytes,uint256)))": {
+					"notice": "Attests to a specific schema."
+				},
+				"attestByDelegation((bytes32,(address,uint64,bool,bytes32,bytes,uint256),(uint8,bytes32,bytes32),address))": {
+					"notice": "Attests to a specific schema via the provided EIP712 signature."
+				},
+				"constructor": {
+					"notice": "Creates a new EAS instance."
+				},
+				"getAttestTypeHash()": {
+					"notice": "Returns the EIP712 type hash for the attest function."
+				},
+				"getAttestation(bytes32)": {
+					"notice": "Returns an existing attestation by UID."
+				},
+				"getDomainSeparator()": {
+					"notice": "Returns the domain separator used in the encoding of the signatures for attest, and revoke."
+				},
+				"getName()": {
+					"notice": "Returns the EIP712 name."
+				},
+				"getNonce(address)": {
+					"notice": "Returns the current nonce per-account."
+				},
+				"getRevokeOffchain(address,bytes32)": {
+					"notice": "Returns the timestamp that the specified data was timestamped with."
+				},
+				"getRevokeTypeHash()": {
+					"notice": "Returns the EIP712 type hash for the revoke function."
+				},
+				"getSchemaRegistry()": {
+					"notice": "Returns the address of the global schema registry."
+				},
+				"getTimestamp(bytes32)": {
+					"notice": "Returns the timestamp that the specified data was timestamped with."
+				},
+				"isAttestationValid(bytes32)": {
+					"notice": "Checks whether an attestation exists."
+				},
+				"multiAttest((bytes32,(address,uint64,bool,bytes32,bytes,uint256)[])[])": {
+					"notice": "Attests to multiple schemas."
+				},
+				"multiAttestByDelegation((bytes32,(address,uint64,bool,bytes32,bytes,uint256)[],(uint8,bytes32,bytes32)[],address)[])": {
+					"notice": "Attests to multiple schemas using via provided EIP712 signatures."
+				},
+				"multiRevoke((bytes32,(bytes32,uint256)[])[])": {
+					"notice": "Revokes existing attestations to multiple schemas."
+				},
+				"multiRevokeByDelegation((bytes32,(bytes32,uint256)[],(uint8,bytes32,bytes32)[],address)[])": {
+					"notice": "Revokes existing attestations to multiple schemas via provided EIP712 signatures."
+				},
+				"multiRevokeOffchain(bytes32[])": {
+					"notice": "Revokes the specified multiple bytes32 data."
+				},
+				"multiTimestamp(bytes32[])": {
+					"notice": "Timestamps the specified multiple bytes32 data."
+				},
+				"revoke((bytes32,(bytes32,uint256)))": {
+					"notice": "Revokes an existing attestation to a specific schema."
+				},
+				"revokeByDelegation((bytes32,(bytes32,uint256),(uint8,bytes32,bytes32),address))": {
+					"notice": "Revokes an existing attestation to a specific schema via the provided EIP712 signature."
+				},
+				"revokeOffchain(bytes32)": {
+					"notice": "Revokes the specified bytes32 data."
+				},
+				"timestamp(bytes32)": {
+					"notice": "Timestamps the specified bytes32 data."
+				},
+				"version()": {
+					"notice": "Returns the full semver contract version."
+				}
+			},
+			"notice": "EAS - Ethereum Attestation Service",
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/EAS.sol": "EAS"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"@openzeppelin/contracts/interfaces/IERC5267.sol": {
+			"keccak256": "0xac6c2efc64baccbde4904ae18ed45139c9aa8cff96d6888344d1e4d2eb8b659f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://6e416a280c610b6b7a5f158e4a41aacfaec01ef14d5d1de13b46be9e090265fc",
+				"dweb:/ipfs/QmYZP2KrdyccBbhLZT42auhvBTMkwiwUS3V6HWb42rbwbG"
+			]
+		},
+		"@openzeppelin/contracts/utils/Address.sol": {
+			"keccak256": "0x006dd67219697fe68d7fbfdea512e7c4cb64a43565ed86171d67e844982da6fa",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://2455248c8ddd9cc6a7af76a13973cddf222072427e7b0e2a7d1aff345145e931",
+				"dweb:/ipfs/QmfYjnjRbWqYpuxurqveE6HtzsY1Xx323J428AKQgtBJZm"
+			]
+		},
+		"@openzeppelin/contracts/utils/ShortStrings.sol": {
+			"keccak256": "0xc0e310c163edf15db45d4ff938113ab357f94fa86e61ea8e790853c4d2e13256",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://04db5bc05dcb05ba1f6ca2dfbead17adc8a2e2f911aa80b05e7a36d9eaf96516",
+				"dweb:/ipfs/QmVkfHZbXVBUPsTopueCn3qGJX8aEjahFF3Fn4NcygLNm5"
+			]
+		},
+		"@openzeppelin/contracts/utils/StorageSlot.sol": {
+			"keccak256": "0xf09e68aa0dc6722a25bc46490e8d48ed864466d17313b8a0b254c36b54e49899",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://e26daf81e2252dc1fe1ce0e4b55c2eb7c6d1ee84ae6558d1a9554432ea1d32da",
+				"dweb:/ipfs/Qmb1UANWiWq5pCKbmHSu772hd4nt374dVaghGmwSVNuk8Q"
+			]
+		},
+		"@openzeppelin/contracts/utils/Strings.sol": {
+			"keccak256": "0x3088eb2868e8d13d89d16670b5f8612c4ab9ff8956272837d8e90106c59c14a0",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://b81d9ff6559ea5c47fc573e17ece6d9ba5d6839e213e6ebc3b4c5c8fe4199d7f",
+				"dweb:/ipfs/QmPCW1bFisUzJkyjroY3yipwfism9RRCigCcK1hbXtVM8n"
+			]
+		},
+		"@openzeppelin/contracts/utils/cryptography/ECDSA.sol": {
+			"keccak256": "0x809bc3edb4bcbef8263fa616c1b60ee0004b50a8a1bfa164d8f57fd31f520c58",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://8b93a1e39a4a19eba1600b92c96f435442db88cac91e315c8291547a2a7bcfe2",
+				"dweb:/ipfs/QmTm34KVe6uZBZwq8dZDNWwPcm24qBJdxqL3rPxBJ4LrMv"
+			]
+		},
+		"@openzeppelin/contracts/utils/cryptography/EIP712.sol": {
+			"keccak256": "0x8432884527a7ad91e6eed1cfc5a0811ae2073e5bca107bd0ca442e9236b03dbd",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://e3aa0eadab7aafcf91a95684765f778f64386f0368de88522ce873c21385278a",
+				"dweb:/ipfs/QmPfaVAqWgH1QsT3dHVuL6jwMZbVKdoP8w1PvpiPT2FPWd"
+			]
+		},
+		"@openzeppelin/contracts/utils/math/Math.sol": {
+			"keccak256": "0xe4455ac1eb7fc497bb7402579e7b4d64d928b846fce7d2b6fde06d366f21c2b3",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://cc8841b3cd48ad125e2f46323c8bad3aa0e88e399ec62acb9e57efa7e7c8058c",
+				"dweb:/ipfs/QmSqE4mXHA2BXW58deDbXE8MTcsL5JSKNDbm23sVQxRLPS"
+			]
+		},
+		"@openzeppelin/contracts/utils/math/SignedMath.sol": {
+			"keccak256": "0xf92515413956f529d95977adc9b0567d583c6203fc31ab1c23824c35187e3ddc",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://c50fcc459e49a9858b6d8ad5f911295cb7c9ab57567845a250bf0153f84a95c7",
+				"dweb:/ipfs/QmcEW85JRzvDkQggxiBBLVAasXWdkhEysqypj9EaB6H2g6"
+			]
+		},
+		"contracts/Common.sol": {
+			"keccak256": "0xd8e7adef9c8f0ae6d1cc70cc600b0a8af49b4bc28e2683626f7ae74c80d948e7",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://34cfc9d51bff93f170c9f1e26454715c910999425343be3192e9dc6dafc1cd93",
+				"dweb:/ipfs/QmW9GCkxCjmwbMLUrSimTmzrRxoGcSfUMTj2FkVFALD81Q"
+			]
+		},
+		"contracts/EAS.sol": {
+			"keccak256": "0x97b000489c4eafde376f0405cf587a0840b6539822dbd2dbcf1acc8aefe7b8e3",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://f5222a9dba113a83de2eab2d448c4e754e1d3351f507873a1effe7c12e02260b",
+				"dweb:/ipfs/QmYFREjmsfRTfrAZJp4izWkzEbz5ns74g3xuKTYMfoHvLR"
+			]
+		},
+		"contracts/EIP712Verifier.sol": {
+			"keccak256": "0x3a1a0a508bf915d8ab23393da8c85ee3a1322bd5b3499f75d68346341c24e03d",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://e6a01a7527c7c6073116da0bcefc7f33e3ed50186ad813d1762811dd824f824b",
+				"dweb:/ipfs/QmRNt6kkKJTPiEhCetFni2yn22FUMFN1cQqQZTtsy6BFyD"
+			]
+		},
+		"contracts/IEAS.sol": {
+			"keccak256": "0x0bb095a954b0b576070339e768fa19512a0a7f9ddea9a348d1b57f98cbb5189c",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://e1a2aa881950cde6e8d2454cfb79bc0f91849e84838712c37f59bfb5c2b79b61",
+				"dweb:/ipfs/QmY1QRAyDrCGT2YTTV8EnJ9vv7JkUT8qER6RyefZ4F3qAi"
+			]
+		},
+		"contracts/ISchemaRegistry.sol": {
+			"keccak256": "0x6bd99597a5b301701cd5ea4ee21f2e3dca7f901809adbcbafa8edb5eebe9779f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://9dddae36148dd8f89a26a256f1d0e6aa239e53b780c85b23d68f41db552e21aa",
+				"dweb:/ipfs/QmdxKu2iY7KaTqnV1rCsodXSU2YNRLdmGwmS4n5rRqD2rf"
+			]
+		},
+		"contracts/ISchemaResolver.sol": {
+			"keccak256": "0xe06e6960f2ea2939628c5e95fe5f0a36962cfae22576d4e94c7bccd01da118f7",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://53cadea585518d5dbc102ed59d93295cdf514d894e5b845fe2314eac6e7499cf",
+				"dweb:/ipfs/QmUg8A17vrnt2k6J8jSJkifWT5MAn4246HpFz2CmNa94mo"
+			]
+		},
+		"contracts/Semver.sol": {
+			"keccak256": "0x314b49e414341b14b6b0a59b95345b7d08a37a1720cb0ab9bacd9e928d4e9043",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://26bc2a2b2959793235a0fa23ddfff397ee8361459c41f099801f8ea02c0241e6",
+				"dweb:/ipfs/QmZ7uS43WzsEx9fezz6Gn1NYnD281TTimnMhHyXFH2nJb6"
+			]
+		}
+	},
+	"version": 1
+}
