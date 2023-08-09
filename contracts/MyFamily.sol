@@ -2,21 +2,28 @@
 
 pragma solidity ^0.8.0;
 
-import "./ONFT721.sol";
+import "./FamilyAssets.sol";
 import "./ONFT1155.sol";
 
 contract MyFamily {
 
-    ONFT721 oNFT721 ;
-    ONFT1155 oNFT1155 ;
+    MyFamilyAssets public mfa ;
+    ONFT1155 public oNFT1155 ;
 
     uint familyId;
     uint assetId;
+    uint[] dummyArray;
     uint16 version = 1;
     uint256 value = 2000000;
     bytes adapterParams =abi.encodePacked(version,value);
      //'0x00010000000000000000000000000000000000000000000000000000000000030d40';
 
+    event FamilyCreated( string indexed family, address indexed creator, uint indexed familyId);
+    event NewFamilyMember(uint indexed familyId, address indexed familyMember, address indexed addedby, string relation);
+    event NewFamilyAsset(uint indexed familyId, uint indexed assetId, address indexed addedBy);
+    event FamilyAssetRemoved(uint indexed familyId, uint indexed assetId, address indexed removedBy);
+
+    
     struct UserFamily{
         address creator;
         string familyName;
@@ -38,18 +45,19 @@ contract MyFamily {
     }
 
 
-    function add721Address(address _address) public {
-        oNFT721 = ONFT721(_address);
+    function addFamilyAssetAddress(address _address) public {
+        mfa = MyFamilyAssets(_address);
     }
 
 
     function createFamily( string memory _familyName, string memory _URI) public {
-
-        require(family[familyId].creator == address(0), 'Family Name exists');
+        
+        familyId++;
+        require(family[familyId].creator == address(0), 'Family exists');
         family[familyId] = UserFamily(msg.sender, _familyName, familyId) ;
         addFamilyMembers(msg.sender, familyId, 'Self' );
         oNFT1155.setURI(familyId, _URI);
-        familyId++;
+        emit FamilyCreated(_familyName, msg.sender,familyId);
     }
 
     function addFamilyMembers( address _member, uint _familyId, string memory relation) public payable {
@@ -60,17 +68,43 @@ contract MyFamily {
         
         familyMembers[_member][_familyId] = Relations(msg.sender, relation);
         oNFT1155.mint(_member, _familyId, 5 );        
+        emit NewFamilyMember(_familyId, _member, msg.sender, relation);
 
     }
 
+
+    // TO prevent spamming one can mint asset only if belongs to a family
     function addAsset( uint _familyId, string memory assetURI ) public payable {
 
+        assetId++; 
+        mfa.safeMint(msg.sender, assetId, assetURI);
+        shareAsset(_familyId, assetId);               
+    }
+
+    function shareAsset(uint _familyId, uint _assetId) public {
+                       
         require(oNFT1155.balanceOf(msg.sender, _familyId) > 0, "Family NFT is required");
-        uint[] memory dummyArray = assetFamilyMapping[_familyId];
-        oNFT721.mint(msg.sender, assetId, assetURI);
-        dummyArray[dummyArray.length] = assetId;
+        dummyArray = assetFamilyMapping[_familyId];
+        dummyArray.push(_assetId);
         assetFamilyMapping[_familyId] = dummyArray;
-        assetId++;        
+        emit NewFamilyAsset(_familyId, _assetId, msg.sender);
+        
+    }
+
+    function removeAsset(uint _familyId, uint  _assetId) public {
+        require(mfa.ownerOf(_assetId) == msg.sender, "User is not the Owner");
+        dummyArray = assetFamilyMapping[_familyId];
+        for(uint i=0; i < dummyArray.length; i++) {
+            if(dummyArray[i] == _assetId) {
+                dummyArray[i] = dummyArray[dummyArray.length -1];
+                dummyArray.pop();
+            }
+        }
+
+        require (assetFamilyMapping[_familyId].length > dummyArray.length, 'Asset Not found in Family' );
+        assetFamilyMapping[_familyId] = dummyArray;
+        emit FamilyAssetRemoved(_familyId, _assetId, msg.sender);
+
     }
 
     function sendTokens(uint16 _dstChainId, uint _tokenId, address payable _targetAddress, uint _amount) public payable {
