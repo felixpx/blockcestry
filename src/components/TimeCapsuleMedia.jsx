@@ -107,7 +107,7 @@ const TimeCapsuleMedia = () => {
     setOpenShareDialog(false);
   };
   return (
-    <section className="overflow-x-auto flex items-center justify-center mt-2 w-9/12 ">
+    <section className="overflow-x-auto flex items-center justify-center mt-2 w-full ">
       <div className=" bg-tarnsparent pt-11">
         {!isEditingEnabled && <EnableEditButton />}
 

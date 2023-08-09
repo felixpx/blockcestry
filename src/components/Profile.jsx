@@ -3,10 +3,13 @@
 import { useState } from "react";
 import Overview from "../components/ProfileNav/Overview";
 import TimeCapsuleMedia from "./TimeCapsuleMedia";
+import FamilyTreeList from "./FamilyTreeList";
+import Heading from "./ProfileNav/Heading";
+import TimeCapsuleList from "./TimeCapsuleList";
 
 const secondaryNavigation = [
   { name: "Overview", href: "#", current: true },
-  { name: "Time Capsule", href: "#", current: false },
+  { name: "TimeCapsule", href: "#", current: false },
   { name: "Familytree", href: "#", current: false },
   { name: "Settings", href: "#", current: false },
   { name: "Messages", href: "#", current: false },
@@ -17,10 +20,10 @@ function classNames(...classes) {
 }
 
 export default function Example() {
-  const [selectedNav, setSelectedNav] = useState("");
+  const [selectedNav, setSelectedNav] = useState("Overview");
   return (
     <>
-      <main className="bg-black w-full bg-opacity-70 rounded-xl">
+      <main className="bg-black w-full bg-opacity-70  sm:-mt-12 lg:-mt-24 rounded-xl">
         <header>
           {/* Secondary navigation */}
           <nav className="flex overflow-x-auto border-b border-white/10 py-4">
@@ -35,9 +38,9 @@ export default function Example() {
                     onClick={() => {
                       setSelectedNav(item.name);
                     }}
-                    className={
+                    className={classNames(
                       selectedNav == item.name ? "text-indigo-400" : ""
-                    }
+                    )}
                   >
                     {item.name}
                   </a>
@@ -45,15 +48,18 @@ export default function Example() {
               ))}
             </ul>
           </nav>
-
-          <div hidden={selectedNav != "Overview"} className="">
-            <Overview />
-          </div>
-          <div
-            hidden={selectedNav != "Time Capsule"}
-            className="items-center flex flex-col justify-center"
-          >
-            <TimeCapsuleMedia />
+          <div>
+            <div hidden={selectedNav != "Overview"} className="">
+              <Overview />
+            </div>
+            <div hidden={selectedNav != "TimeCapsule"} className="">
+              <Heading />
+              <TimeCapsuleList />
+            </div>
+            <div hidden={selectedNav != "Familytree"} className="">
+              <Heading />
+              <FamilyTreeList />
+            </div>
           </div>
         </header>
       </main>
