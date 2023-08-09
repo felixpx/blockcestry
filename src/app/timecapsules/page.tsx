@@ -1,7 +1,7 @@
 import Image from "next/image";
-import FamilyTreeList from "../../components/FamilyTreeList";
+import TimeCapsuleList from "../../components/TimeCapsuleList";
 import Header2 from "../../components/Header2";
-import {  faPeopleGroup } from '@fortawesome/free-solid-svg-icons'
+import {  faClock } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
@@ -22,11 +22,9 @@ export default function Home() {
       <Header2 />
 
       <div className="flex flex-col items-center mt-16">
-      <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-      <FontAwesomeIcon icon={faPeopleGroup}   className={"text-green-600 mr-2"}  />
-Family Trees
-      </h2>
-        <FamilyTreeList />
+      <h2 className="mt-2 mb-4 text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">      <FontAwesomeIcon icon={faClock}   className={"text-green-600 mr-2"}  />
+Time Capsules</h2>
+        <TimeCapsuleList />
       </div>
     </main>
   );

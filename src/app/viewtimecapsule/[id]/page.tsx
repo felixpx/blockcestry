@@ -1,7 +1,7 @@
 import Image from "next/image";
-import FamilyTreeList from "../../components/FamilyTreeList";
-import Header2 from "../../components/Header2";
-import {  faPeopleGroup } from '@fortawesome/free-solid-svg-icons'
+import TimeCapsuleMedia from "../../../components/TimeCapsuleMedia";
+import Header2 from "../../../components/Header2";
+import {  faClock } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
@@ -22,11 +22,16 @@ export default function Home() {
       <Header2 />
 
       <div className="flex flex-col items-center mt-16">
-      <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-      <FontAwesomeIcon icon={faPeopleGroup}   className={"text-green-600 mr-2"}  />
-Family Trees
-      </h2>
-        <FamilyTreeList />
+      <div className="mx-auto max-w-2xl text-center">
+        <p className="text-base font-semibold leading-7 text-indigo-600">Addams Family</p>
+        <h2 className="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">      <FontAwesomeIcon icon={faClock}   className={"text-green-600 mr-2"}  />
+Time Capsule</h2>
+        <p className="mt-6 text-lg leading-8 text-gray-600">
+          Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet
+          fugiat veniam occaecat fugiat aliqua.
+        </p>
+      </div>
+        <TimeCapsuleMedia />
       </div>
     </main>
   );

@@ -11,6 +11,10 @@ import {
 import Image from "next/image";
 import HeaderItem from "./HeaderItem";
 import { useRouter } from "next/navigation";
+import chains from "@/chains/chains";
+import { useState,useEffect } from "react";
+import { useAccountAbstraction } from "../../context/accountContext"
+
 
 const navigation = [
   { name: "Home", href: "#" },
@@ -21,6 +25,19 @@ const navigation = [
 
 export default function AltHeader() {
   const router = useRouter();
+  const {
+    ownerAddress,
+    safes,
+    chainId,
+    isAuthenticated,
+    web3Provider,
+    loginWeb3Auth,
+    logoutWeb3Auth,
+    setChainId
+    // ...other context values and functions you need
+  } = useAccountAbstraction();
+
+  const [selectedChain,setSelectedChain] = useState(-1)
 
   function openHomepage() {
     router.push("/");
@@ -33,9 +50,41 @@ export default function AltHeader() {
     router.push("/profile");
   }
   function openTC() {
-    router.push("/timecapsule");
+    router.push("/timecapsules");
   }
 
+  const handleChange = (event) => {
+    const selectedChainIndex = parseInt(event.target.value); // Convert value to integer
+    setSelectedChain(selectedChainIndex); // Update the selected value
+      };
+
+  const signIn = async ()=>{
+    if(selectedChain==-1)
+       return
+
+    setChainId(selectedChain)
+    loginWeb3Auth()
+
+  }
+
+
+  const signOut = async ()=>{
+    logoutWeb3Auth()
+
+  }
+
+  const handleClick = () => {
+    if (ownerAddress) {
+      // Copy the ownerAddress to the clipboard
+      navigator.clipboard.writeText(ownerAddress);
+    }
+  };
+
+  useEffect(()=>{
+    setSelectedChain(chainId)
+
+  
+  },[chainId])
   return (
     <div>
       <Popover as="header" className="relative">
@@ -104,6 +153,34 @@ export default function AltHeader() {
                 >
                   <HeaderItem title="Time Capsule" Icon={ClockIcon} />
                 </div>
+
+               <div>
+      <select value={selectedChain}       className="p-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-teal-700 focus:border-teal-300 bg-teal-200"
+ onChange={handleChange}>
+        <option key={-1} value={-1}> Select Chain
+          </option>
+          
+        {chains.map((chain, index) => (
+          <option key={index} value={index}>
+            {chain.label}
+          </option>
+        ))}
+      </select>
+     { !isAuthenticated &&  <button onClick={signIn}
+        className="ml-2 bg-teal-500 text-white px-4 py-2 rounded-md hover:bg-teal-600 hover:text-white"
+      >
+        Sign In
+      </button> }        
+      
+      {isAuthenticated && <button onClick={signOut}
+        className="ml-2 bg-teal-500 text-white px-4 py-2 rounded-md hover:bg-teal-600 hover:text-white"
+      >
+        Sign Out
+      </button> }     </div>     
+      
+        {ownerAddress &&<div           onClick={handleClick}
+ className="flex items-center bg-white rounded-xl p-2 cursor-pointer">  {ownerAddress && <p className="font-bold text-black hover:text-red-500 ">{ownerAddress.substring(0, 6)}...{ownerAddress.substring(ownerAddress.length - 4)}</p>}</div>}
+              
               </div>
             </div>
           </nav>
