@@ -91,7 +91,7 @@ const FamilyTreeList = () => {
   };
   return (
     <section className="overflow-x-auto  mt-2 px-14 ">
-      <div className="border-t border-white/10 bg-black bg-opacity-70 pt-11">
+      <div className="border-t border-white/10 bg-black bg-opacity-70 rounded-xl pt-11">
         {!isEditingEnabled && <EnableEditButton />}
 
         {isEditingEnabled && (

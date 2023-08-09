@@ -1,11 +1,10 @@
 import Header from "./Header";
-import FamilyTree from "./FamilyTree";
-import FamilyTreeList from "./FamilyTreeList";
-export default function FamilyTree3() {
+import TimeCapsuleList from "./TimeCapsuleList";
+export default function TimeCapsuleBase() {
   return (
     <div className="bg-gray-900 w-full">
       <Header title={"dash"} />
-      <div className="relative isolate overflow-hidden">
+      <div className="relative w-full isolate overflow-hidden">
         <svg
           className="absolute inset-0 -z-10 h-full w-full stroke-white/10 [mask-image:radial-gradient(100%_100%_at_top_right,white,transparent)]"
           aria-hidden="true"
@@ -51,12 +50,12 @@ export default function FamilyTree3() {
         <div className="mx-auto max-w-7xl px-6 flex flex-col justify-center items-center pb-12 pt-10 sm:pb-16 lg:flex lg:px-8 lg:pt-16">
           <div className="mx-auto max-w-2xl flex-shrink-0 lg:mx-0 lg:max-w-xl lg:pt-4">
             <div className="text-2xl lg:mb-16 font-bold tracking-tight text-white sm:text-4xl">
-              FAMILYTREE
+              TIME CAPSULE
             </div>
           </div>
           <div className="mx-auto flex-col w-full mt-16 flex items-center justify-center">
             <div className="max-w-3xl mb-48 flex-none sm:max-w-5xl lg:max-w-none">
-              <FamilyTreeList />
+              <TimeCapsuleList />
             </div>
           </div>
         </div>
