@@ -54,7 +54,7 @@ export default function FamilyTree3() {
               FAMILYTREE
             </div>
           </div>
-          <div className="mx-auto flex-col mt-16 flex max-w-2xl items-center justify-center sm:mt-24">
+          <div className="mx-auto flex-col w-full mt-16 flex items-center justify-center sm:mt-24">
             <div className="max-w-3xl mb-48 flex-none sm:max-w-5xl lg:max-w-none">
               <FamilyTreeList />
             </div>
