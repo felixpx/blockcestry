@@ -2,12 +2,29 @@
 
 import { Disclosure } from "@headlessui/react";
 import { LinkIcon } from "@heroicons/react/24/outline";
+import { useState } from "react";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Header({ title }) {
+const tabs = [
+  { name: "Home", href: "/", current: true },
+  { name: "Familytree", href: "familytree", current: false },
+  { name: "Profile", href: "profile", current: false },
+  { name: "Time Capsule", href: "timecapsule", current: false },
+];
+
+export default function Header() {
+  const [selectedTab, setSelectedTab] = useState("");
+
+  function setHome() {
+    setSelectedTab("/");
+  }
+  function setFam() {
+    setSelectedTab("familytree");
+  }
+
   return (
     <Disclosure as="nav" className="bg-transparent">
       {({ open }) => (
@@ -22,32 +39,47 @@ export default function Header({ title }) {
                     alt="Your Company"
                   />
                 </div>
+
                 <div className="hidden md:ml-6 md:flex md:space-x-8">
+                  {tabs.map((tab) => {
+                    <a
+                      key={tab.name}
+                      onClick={() => {
+                        setSelectedTab(tab.name);
+                      }}
+                      className={classNames(
+                        selectedTab == tab.name
+                          ? "text-gray-500"
+                          : "text-gray-200 hover:text-black"
+                      )}
+                    >
+                      <span>{tab.name} Hello</span>
+                    </a>;
+                  })}
                   {/* Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" */}
                   <a
                     href="/"
-                    className={`inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium text-white-smoke ${(title =
-                      "dash"
-                        ? "text-white-smoke border-indigo-500"
-                        : "text-gray-500 border-transparent")}}`}
+                    onClick={setHome}
+                    className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-400 hover:border-gray-300 hover:text-gray-100"
                   >
                     Home
                   </a>
                   <a
                     href="familytree"
-                    className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                    onClick={setFam}
+                    className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-400 hover:border-gray-300 hover:text-gray-100"
                   >
                     Familytree
                   </a>
                   <a
                     href="profile"
-                    className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                    className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-400 hover:border-gray-300 hover:text-gray-100"
                   >
                     Profile
                   </a>
                   <a
                     href="timecapsule"
-                    className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                    className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-400 hover:border-gray-300 hover:text-gray-100"
                   >
                     Time Capsule
                   </a>
