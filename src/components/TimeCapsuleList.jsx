@@ -91,12 +91,12 @@ const TimeCapsuleList = () => {
   };
   return (
     <section className="overflow-x-auto  mt-2 px-14 ">
-      <div className="border-t border-white/10 bg-gray-700 pt-11">
+      <div className="border-t border-white/10 bg-black bg-opacity-70 rounded-xl pt-11">
         {!isEditingEnabled && <EnableEditButton />}
         {isEditingEnabled && (
           <button
             onClick={() => setOpenNFTDataDialog(true)}
-            className="ml-4 p-2 mb-5 inline-flex items-center justify-center rounded-md border-2 border-primary bg-primary px-5 text-base font-semibold text-white transition-all hover:text-teal-500 hover:border-teal-500"
+            className="ml-4 p-2 mb-5 inline-flex items-center justify-center rounded-md border-2 border-primary bg-primary px-5 text-base font-semibold text-white transition-all hover:text-indigo-500 hover:border-indigo-500"
           >
             Create Time Capsule
           </button>
@@ -119,13 +119,13 @@ const TimeCapsuleList = () => {
                 <div className="mt-1 flex items-center justify-between text-base font-medium text-white">
                   <button
                     onClick={() => router.push(`/webinar/${object.tokenId}`)}
-                    className="mb-5 inline-flex items-center justify-center rounded-md border-2 border-primary bg-primary px-5 text-base font-semibold text-white transition-all hover:text-teal-500 hover:border-teal-500"
+                    className="mb-5 inline-flex items-center justify-center rounded-md border-2 border-primary bg-primary px-5 text-base font-semibold text-white transition-all hover:text-indigo-500 hover:border-indigo-500"
                   >
                     View
                   </button>
                   <button
                     onClick={() => setOpenShareDialog(true)}
-                    className="mb-5 inline-flex items-center justify-center rounded-md border-2 border-primary bg-primary px-5 text-base font-semibold text-white transition-all hover:text-teal-500 hover:border-teal-500"
+                    className="mb-5 inline-flex items-center justify-center rounded-md border-2 border-primary bg-primary px-5 text-base font-semibold text-white transition-all hover:text-indigo-500 hover:border-indigo-500"
                   >
                     Share
                   </button>
