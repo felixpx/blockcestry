@@ -1,5 +1,5 @@
-import Header from "../components/Header";
-import FamilyTree from "../components/FamilyTree";
+import Header from "./Header";
+import FamilyTree from "./FamilyTree";
 export default function FamilyTree3() {
   return (
     <div className="bg-gray-900 w-full">
