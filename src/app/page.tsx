@@ -1,6 +1,6 @@
 'use client'
 import Image from "next/image";
-import FamilyTree from "../components/FamilyTree";
+import Landing from "../components/Landing";
 import Header2 from "../components/Header2";
 
 export default function Home() {
@@ -14,7 +14,6 @@ export default function Home() {
             Create your family tree and store files to share with your family
             via filecoin.
           </h1>
-          <FamilyTree />
         </div>
 
        

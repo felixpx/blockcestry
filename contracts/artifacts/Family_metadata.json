@@ -1,0 +1,259 @@
+{
+	"compiler": {
+		"version": "0.8.18+commit.87f61d96"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_member",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "_family",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "relation",
+						"type": "string"
+					}
+				],
+				"name": "addFamilyMembers",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_familyName",
+						"type": "string"
+					}
+				],
+				"name": "createFamily",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"name": "familyCreator",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"name": "familyMembers",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "addedBy",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "relation",
+						"type": "string"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "uuid",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "newData",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "recipient",
+						"type": "address"
+					},
+					{
+						"internalType": "uint64",
+						"name": "expirationTime",
+						"type": "uint64"
+					},
+					{
+						"internalType": "bool",
+						"name": "revocable",
+						"type": "bool"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "refUID",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes",
+						"name": "data",
+						"type": "bytes"
+					},
+					{
+						"internalType": "uint256",
+						"name": "value",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "newRequest",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "schema",
+						"type": "bytes32"
+					},
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "recipient",
+								"type": "address"
+							},
+							{
+								"internalType": "uint64",
+								"name": "expirationTime",
+								"type": "uint64"
+							},
+							{
+								"internalType": "bool",
+								"name": "revocable",
+								"type": "bool"
+							},
+							{
+								"internalType": "bytes32",
+								"name": "refUID",
+								"type": "bytes32"
+							},
+							{
+								"internalType": "bytes",
+								"name": "data",
+								"type": "bytes"
+							},
+							{
+								"internalType": "uint256",
+								"name": "value",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct AttestationRequestData",
+						"name": "data",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"stateMutability": "payable",
+				"type": "receive"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/Family.sol": "Family"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/Common.sol": {
+			"keccak256": "0xd8e7adef9c8f0ae6d1cc70cc600b0a8af49b4bc28e2683626f7ae74c80d948e7",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://34cfc9d51bff93f170c9f1e26454715c910999425343be3192e9dc6dafc1cd93",
+				"dweb:/ipfs/QmW9GCkxCjmwbMLUrSimTmzrRxoGcSfUMTj2FkVFALD81Q"
+			]
+		},
+		"contracts/Family.sol": {
+			"keccak256": "0x0fba8ae877086ee45665e0540c2823a8242a628ca530395c0596c9be4de32ec1",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://8133132bf41230717f3acc9e5d767e398f18a5b7beafd2aa933e8614e51041fb",
+				"dweb:/ipfs/QmSqYX8qfnQLvaXQh1RDX7kwb86joc7gzr61MAZRPLXYDH"
+			]
+		},
+		"contracts/IEAS.sol": {
+			"keccak256": "0x0bb095a954b0b576070339e768fa19512a0a7f9ddea9a348d1b57f98cbb5189c",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://e1a2aa881950cde6e8d2454cfb79bc0f91849e84838712c37f59bfb5c2b79b61",
+				"dweb:/ipfs/QmY1QRAyDrCGT2YTTV8EnJ9vv7JkUT8qER6RyefZ4F3qAi"
+			]
+		},
+		"contracts/ISchemaRegistry.sol": {
+			"keccak256": "0x6bd99597a5b301701cd5ea4ee21f2e3dca7f901809adbcbafa8edb5eebe9779f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://9dddae36148dd8f89a26a256f1d0e6aa239e53b780c85b23d68f41db552e21aa",
+				"dweb:/ipfs/QmdxKu2iY7KaTqnV1rCsodXSU2YNRLdmGwmS4n5rRqD2rf"
+			]
+		},
+		"contracts/ISchemaResolver.sol": {
+			"keccak256": "0xe06e6960f2ea2939628c5e95fe5f0a36962cfae22576d4e94c7bccd01da118f7",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://53cadea585518d5dbc102ed59d93295cdf514d894e5b845fe2314eac6e7499cf",
+				"dweb:/ipfs/QmUg8A17vrnt2k6J8jSJkifWT5MAn4246HpFz2CmNa94mo"
+			]
+		}
+	},
+	"version": 1
+}
