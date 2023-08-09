@@ -1,8 +1,10 @@
+'use client'
 import Image from "next/image";
 import FamilyTree from "../components/FamilyTree";
 import Header2 from "../components/Header2";
 
 export default function Home() {
+  
   return (
     <div>
       <Header2 />
@@ -14,6 +16,8 @@ export default function Home() {
           </h1>
           <FamilyTree />
         </div>
+
+       
 
         <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
           <a
