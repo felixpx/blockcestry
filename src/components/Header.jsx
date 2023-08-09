@@ -1,13 +1,7 @@
 "use client";
 
-import { Fragment } from "react";
-import { Disclosure, Menu, Transition } from "@headlessui/react";
-import {
-  Bars3Icon,
-  BellIcon,
-  LinkIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
+import { Disclosure } from "@headlessui/react";
+import { LinkIcon } from "@heroicons/react/24/outline";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -34,7 +28,7 @@ export default function Header({ title }) {
                     href="/"
                     className={`inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium text-white-smoke ${(title =
                       "dash"
-                        ? "text-white-smoke border-teal-500"
+                        ? "text-white-smoke border-indigo-500"
                         : "text-gray-500 border-transparent")}}`}
                   >
                     Home
@@ -63,7 +57,7 @@ export default function Header({ title }) {
                 <div className="flex-shrink-0">
                   <button
                     type="button"
-                    className="relative inline-flex items-center gap-x-1.5 rounded-md bg-teal-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-600"
+                    className="relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                   >
                     <LinkIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
                     Connect
