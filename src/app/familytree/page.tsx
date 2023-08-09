@@ -1,8 +1,8 @@
 import Image from "next/image";
 import FamilyTreeList from "../../components/FamilyTreeList";
-import Header2 from "../../components/Header2";
-import {  faPeopleGroup } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Header from "../../components/Header";
+import { faPeopleGroup } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 
@@ -19,13 +19,16 @@ export default function Home() {
           priority
         />
       </div> */}
-      <Header2 />
+      <Header />
 
       <div className="flex flex-col items-center mt-16">
-      <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-      <FontAwesomeIcon icon={faPeopleGroup}   className={"text-green-600 mr-2"}  />
-Family Trees
-      </h2>
+        <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          <FontAwesomeIcon
+            icon={faPeopleGroup}
+            className={"text-green-600 mr-2"}
+          />
+          Family Trees
+        </h2>
         <FamilyTreeList />
       </div>
     </main>
