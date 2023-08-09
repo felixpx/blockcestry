@@ -143,7 +143,7 @@ export default function AltHeader() {
                 >
                   <HeaderItem title="Profile" Icon={UserCircleIcon} />
                 </div>
-                <div
+              {/*    <div
                   onClick={openTC}
                   className={`cursor-pointer whitespace-nowrap ${
                     router.pathname == "/timecapsule"
@@ -152,7 +152,7 @@ export default function AltHeader() {
                   }`}
                 >
                   <HeaderItem title="Time Capsule" Icon={ClockIcon} />
-                </div>
+                </div>*/}
 
                <div>
       <select value={selectedChain}       className="p-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-teal-700 focus:border-teal-300 bg-teal-200"

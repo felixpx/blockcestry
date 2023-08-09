@@ -10,21 +10,67 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { useAccountAbstraction } from '../../../context/accountContext';
 import EnableEditButton from "../../components/EnableEditing";
+import { useRouter } from "next/navigation";
+import { NFTStorage } from "nft.storage";
+import Notification from "@/components/Notification/Notification";
 
 export default function CreateFamilyTree() {
   const divRef = useRef();
+  const imageRef = useRef()
   const fileInputRef = useRef(null);
+  const router = useRouter();
+  const [nftstorage] = useState(
+    new NFTStorage({ token: process.env.NEXT_PUBLIC_NFT_STORAGE_API_KEY})
+  );
 
+  // NOTIFICATIONS functions
+const [notificationTitle, setNotificationTitle] = useState();
+const [notificationDescription, setNotificationDescription] = useState();
+const [dialogType, setDialogType] = useState(1);
+const [show, setShow] = useState(false);
+const close = async () => {
+  setShow(false);
+};
+
+  
   const [selectedFile, setSelectedFile] = useState(null);
   const {
     isEditingEnabled
    // ...other context values and functions you need
   } = useAccountAbstraction();
   
-  const handleFileChange = (event) => {
+  const handleFileChange = async(event) => {
     const file = event.target.files[0];
     setSelectedFile(file);
-  };
+    try{
+      const objectData = {name:"Image", description:"Profile Pic",image:file }
+      const metadata = await nftstorage.store(objectData) 
+      console.log(metadata)
+      //console.log(metadata.data.image.href)
+     const link =metadata.data.image.href
+     const imageUrl = link.replace('ipfs://', 'https://').replace(/\/[^/]+$/, (match) => {
+      return match.replace('/', '.ipfs.dweb.link/');
+    });    
+    console.log(link)
+    console.log(imageUrl)
+    imageRef.current.value = imageUrl
+    navigator.clipboard.writeText(imageUrl);
+    setDialogType(1) //Success
+    setNotificationTitle("Upload Image")
+    setNotificationDescription("Image link copied to clipboard.")
+    setShow(true)
+  
+      }catch(error)
+      {
+        console.log(error)
+        setDialogType(2) //Error
+       setNotificationTitle("Upload Image")
+      setNotificationDescription("Error uploading image.")
+      setShow(true)
+   
+      }
+    }
+  
   const [nodes,setNodes] = useState( [
     { id: 3, pids: [1, 2], gender: 'female', photo: '', name: 'Your Name', born: '1943-01-13', email: '', phone: '', city: '', country: 'TT' },
    ]
@@ -127,7 +173,12 @@ Family Tree
   <section className="mt-2 w-full overflow-x-auto px-14 ">
     <div className="border-t border-white/10 bg-gray-700 pt-11 ">
     {!isEditingEnabled && <EnableEditButton />}
-
+    <button 
+        onClick={()=>    router.push(`/viewtimecapsule/${1}`)
+      }
+        className="ml-2 p-2 mb-5 inline-flex items-center justify-center rounded-md border-2 border-primary bg-primary px-5 text-base font-semibold text-white transition-all hover:text-teal-500 hover:border-teal-500">
+        Time Capsule
+      </button>
     {isEditingEnabled &&   <button 
         onClick={saveFamilyTree}
         className="ml-2 p-2 mb-5 inline-flex items-center justify-center rounded-md border-2 border-primary bg-primary px-5 text-base font-semibold text-white transition-all hover:text-teal-500 hover:border-teal-500">
@@ -149,7 +200,8 @@ Family Tree
       {isEditingEnabled && <input
     id="image-url"
     type="text"
-    className="w-80 ml-2 py-2 px-3 bg-gray-800 border border-gray-300 rounded text-white focus:outline-none focus:border-gray-400"
+    ref={imageRef}
+    className="mr-2 w-80 ml-2 py-2 px-3 bg-gray-800 border border-gray-300 rounded text-white focus:outline-none focus:border-gray-400"
     placeholder="Image URL"
   />}
       
@@ -161,7 +213,13 @@ Family Tree
     </div>
   </section>
 </div>
-
+<Notification
+        type={dialogType}
+        show={show}
+        close={close}
+        title={notificationTitle}
+        description={notificationDescription}
+      />
     </main>
   );
 }

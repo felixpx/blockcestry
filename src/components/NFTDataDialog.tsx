@@ -69,7 +69,7 @@ export default function NFTDataDialog(props:any) {
         name="name"
         id="name"
         required
-        defaultValue="Family Tree Name"
+        defaultValue="Time Capsule"
         placeholder="15"
         className="w-full rounded-md border border-stroke bg-[#353444] py-3 px-6 text-base font-medium text-white outline-none transition-all focus:bg-[#454457] focus:shadow-input mb-2"
       />

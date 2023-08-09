@@ -10,6 +10,7 @@ import Notification from "@/components/Notification/Notification";
 import { ethers } from "ethers";
 import EnableEditButton from "./EnableEditing";
 import { useAccountAbstraction } from '../../context/accountContext';
+import { NFTStorage } from "nft.storage";
 
 const TimeCapsules = [{name:"Adams Family" ,nftId:1, image:"https://nft-cdn.alchemy.com/eth-goerli/3246a09e9116bbd185067af11cae720c"},{name:"Biden Family" ,nftId:2, image:"https://nft-cdn.alchemy.com/eth-goerli/32191cd34600770965693be38f760676"}]
 
@@ -17,7 +18,9 @@ const TimeCapsuleList = () => {
 const router = useRouter();
 const [openNFTDataDialog,setOpenNFTDataDialog] = useState(false)
 const [openShareDialog,setOpenShareDialog] = useState(false)
-
+const [nftstorage] = useState(
+  new NFTStorage({ token: process.env.NEXT_PUBLIC_NFT_STORAGE_API_KEY})
+);
 const [refreshData,setRefreshData] = useState(new Date()) 
 const {
   isEditingEnabled
@@ -60,6 +63,24 @@ const createTimeCapsule = async(_name,_description,_file)=>{
    setShow(true)
    return
   }
+
+  try{
+    const objectData = {name:_name, description:_description,image:_file,ipfsCid:"NOCID" }
+    const metadata = await nftstorage.store(objectData) 
+    console.log(metadata)
+    //console.log(metadata.data.image.href)
+   const link =metadata.data.image.href
+   const imageUrl = link.replace('ipfs://', 'https://').replace(/\/[^/]+$/, (match) => {
+    return match.replace('/', '.ipfs.dweb.link/');
+  });    
+  console.log(link)
+  console.log(imageUrl)
+    }catch(error)
+    {
+      console.log(error)
+    }
+  
+
 }
 
 const closeNFTDataDialog = ()=>{
