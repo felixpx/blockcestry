@@ -1,5 +1,6 @@
 import Header from "./Header";
 import FamilyTree from "./FamilyTree";
+import FamilyTreeList from "./FamilyTreeList";
 export default function FamilyTree3() {
   return (
     <div className="bg-gray-900 w-full">
@@ -53,9 +54,9 @@ export default function FamilyTree3() {
               FAMILYTREE
             </div>
           </div>
-          <div className="mx-auto mt-16 flex max-w-2xl sm:mt-24 lg:ml-10 lg:mr-0 lg:mt-0 lg:max-w-none lg:flex-none xl:ml-32">
+          <div className="mx-auto flex-col mt-16 flex max-w-2xl items-center justify-center sm:mt-24">
             <div className="max-w-3xl mb-48 flex-none sm:max-w-5xl lg:max-w-none">
-              <FamilyTree />
+              <FamilyTreeList />
             </div>
           </div>
         </div>
