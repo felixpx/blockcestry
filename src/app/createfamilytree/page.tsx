@@ -13,6 +13,10 @@ import EnableEditButton from "../../components/EnableEditing";
 import { useRouter,useSearchParams  } from "next/navigation";
 import { NFTStorage } from "nft.storage";
 import Notification from "@/components/Notification/Notification";
+import { formatIPFSURL } from "../../../utils/utils";
+import { Web3Storage, File } from "web3.storage";
+import { familyTokenAddress,familyTokenABI } from "@/components/Contracts";
+import { ethers } from "ethers";
 
 export default function CreateFamilyTree() 
  {
@@ -24,6 +28,9 @@ export default function CreateFamilyTree()
   const router = useRouter();
   const [nftstorage] = useState(
     new NFTStorage({ token: process.env.NEXT_PUBLIC_NFT_STORAGE_API_KEY})
+  );
+  const [storage] = useState(
+    new Web3Storage({ token: process.env.NEXT_PUBLIC_WEB3_STORAGE_KEY })
   );
 
   // NOTIFICATIONS functions
@@ -38,8 +45,13 @@ const close = async () => {
   
   const [selectedFile, setSelectedFile] = useState(null);
   const {
-    isEditingEnabled
-   // ...other context values and functions you need
+    isEditingEnabled,
+    isAuthenticated,
+    ownerAddress,
+    chainId,
+    web3Provider,
+    loginWeb3Auth,
+    web3ProviderConnected   // ...other context values and functions you need
   } = useAccountAbstraction();
   
   const handleFileChange = async(event) => {
@@ -51,9 +63,8 @@ const close = async () => {
       console.log(metadata)
       //console.log(metadata.data.image.href)
      const link =metadata.data.image.href
-     const imageUrl = link.replace('ipfs://', 'https://').replace(/\/[^/]+$/, (match) => {
-      return match.replace('/', '.ipfs.dweb.link/');
-    });    
+     const imageUrl = formatIPFSURL(link)
+         
     console.log(link)
     console.log(imageUrl)
     imageRef.current.value = imageUrl
@@ -146,6 +157,51 @@ const close = async () => {
   const saveFamilyTree = async()=>{
      console.log(familyTree?.nodes)
      console.log(nodes)
+     const _cid = await storage.put([new File([JSON.stringify(familyTree?.nodes)],"family.json")]);
+     console.log(_cid)
+     familyObject.ipfsCid = _cid
+     
+     const cid = await storage.put([new File([JSON.stringify(familyObject)],"metadata.json")]);
+     console.log(cid)
+
+     const tokenContract = new ethers.Contract(familyTokenAddress.get(chainId),familyTokenABI,web3Provider?.getSigner());
+     console.log(tokenContract)
+     try{
+      let tx1 = await tokenContract.callStatic.setURI(familyObject.nftId,`ipfs://${cid}/metadata.json`
+      
+       );
+       let tx2 =await tokenContract.setURI(familyObject.nftId,`ipfs://${cid}/metadata.json`
+      
+       );
+
+        await tx2.wait();
+  
+       setDialogType(1); //Success
+       setNotificationTitle("Update Family Tree")
+       setNotificationDescription("Family Tree updated successfully.");
+       setShow(true);
+       
+     }
+     catch(error)
+     {
+      if (error.code === 'TRANSACTION_REVERTED') {
+        console.log('Transaction reverted');
+       // let revertReason = ethers.utils.parseRevertReason(error.data);
+        setNotificationDescription("Reverted");
+      }  else if (error.code === 'ACTION_REJECTED') {
+      setNotificationDescription('Transaction rejected by user');
+    }else {
+     console.log(error)
+     //const errorMessage = ethers.utils.revert(error.reason);
+      setNotificationDescription(`Transaction failed with error: ${error.reason}`);
+    
+  }
+      setDialogType(2) //Error
+      setNotificationTitle("Update Family Tree")
+  
+      setShow(true)
+     }
+  
 
   }
 
@@ -167,6 +223,7 @@ const close = async () => {
   useEffect(()=>{
     setFamilyObject(JSON.parse( searchParams.get('q')))
     console.log(searchParams.get('q'))
+    loginWeb3Auth()
 
   },[])
   return (

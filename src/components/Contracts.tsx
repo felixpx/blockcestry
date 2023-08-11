@@ -6,7 +6,7 @@ export const familyTokenAddress = new Map([[optimismGoerli,"0xD238246168278E2dE8
 ,[base,"0x564a4aC7716F9c5540E0afE163391146e99AA10d"]
 ])
 export const familyTokenABI = ['function uri(uint256 tokenId) external view returns (string memory)',
-'function balanceOf(address account, uint256 id) external view returns (uint256)']
+'function balanceOf(address account, uint256 id) external view returns (uint256)','function setURI( uint tokenId, string memory _tokenURI ) external']
 
 
 export const timeCapsuleTokenAddress = new Map([[optimismGoerli,""]
@@ -16,7 +16,7 @@ export const timeCapsuleTokenAddress = new Map([[optimismGoerli,""]
 export const timeCapsuleTokenABI = []
 
 
-export const myFamilyContractAddress = new Map([[optimismGoerli,""]
+export const myFamilyContractAddress = new Map([[optimismGoerli,"0x9580393a703F1087b50299F464b311afd74E9f59"]
 ,[base,"0x2BC267B005Ab0ac97EE454D8e2dB2fDfaF9AB052"]
 ])
 
@@ -33,8 +33,8 @@ export const  myFamilyContractABI = [
     'event NewFamilyMember(uint indexed familyId, address indexed familyMember, address indexed addedby, string relation)'
   ]
 
-  export const myFamilyAssetsContractAddress = new Map([[optimismGoerli,""]
-  ,[base,""]
+  export const myFamilyAssetsContractAddress = new Map([[optimismGoerli,"0xB2cF9fFd277cC5B1F0ec6387a0ccCF9d57E53409"]
+  ,[base,"0xd9290123C280203e553d210e0a6C13a005BAe46B "]
   ])
   
   export const  myFamilyAssetsContractABI =  [

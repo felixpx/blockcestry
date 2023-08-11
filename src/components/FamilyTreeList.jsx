@@ -29,7 +29,9 @@ const {
   isAuthenticated,
   ownerAddress,
   chainId,
-  web3Provider
+  web3Provider,
+  loginWeb3Auth,
+  web3ProviderConnected
 
  // ...other context values and functions you need
 } = useAccountAbstraction();
@@ -225,16 +227,19 @@ console.log(imageUrl)
 
   useEffect(()=>{
     async function getFamilyTrees(){
-
       if(ownerAddress )
       {
         if(chainId == 0)
         {       
            const data = await getNFTBalances(ownerAddress)  
            console.log(data)
+           
         } 
         else
         {
+          console.log(chainId)
+          console.log(ownerAddress)
+          console.log(web3Provider)
           // const data = await getTokenMetadataForFamilyMember(familyTokenAddress.get(chainId),familyTokenABI,ownerAddress,web3Provider)
            
            //const data  = await getFamilyIdsForFamilyMember(myFamilyContractAddress.get(chainId),myFamilyContractABI,ownerAddress,web3Provider)
@@ -251,9 +256,16 @@ console.log(imageUrl)
       } 
        
     }
-     if(isAuthenticated) 
+     if(web3ProviderConnected) 
     getFamilyTrees()
-  },[refreshData,isAuthenticated])
+   // else
+    //loginWeb3Auth()
+
+  },[refreshData,web3ProviderConnected])
+
+  useEffect(()=>{
+     loginWeb3Auth()
+  },[])
   return (
     <section className="overflow-x-auto  mt-2 px-14 ">
       <div className="border-t border-white/10 bg-black bg-opacity-70 rounded-xl pt-11">

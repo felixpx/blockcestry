@@ -8,9 +8,11 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { useSearchParams } from "next/navigation";
 import { useState,useEffect } from "react";
+
 export default function Home() {
   const searchParams = useSearchParams()
   const [familyObject,setFamilyObject] = useState()
+ 
 
   useEffect(()=>{
     setFamilyObject(JSON.parse( searchParams.get('q')))

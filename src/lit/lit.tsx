@@ -1,6 +1,7 @@
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
 import { ethConnect } from '@lit-protocol/auth-browser';
 import { ethers } from "ethers";
+import chains from "@/chains/chains";
 const client = new LitJsSdk.LitNodeClient({});
 const chain = "ethereum";
 
@@ -108,17 +109,17 @@ const authSig = await ethConnect.signAndSaveAuthMessage({
   }
 
 
-export  const encrypt = async(tokenId:string,tokenAddress:string,walletAddress:string,web3Provider:ethers.providers.Web3Provider,file:any,chain:string)=> {
+export  const encrypt = async(tokenId:string,tokenAddress:string,walletAddress:string,web3Provider:ethers.providers.Web3Provider,file:any,chain:number)=> {
 
     const accessControlConditions = [
       {
           contractAddress: tokenAddress,
           standardContractType: "ERC1155",
-          chain: "optimismGoerli",
+          chain: (chain == 0 ? "optimismGoerli":"baseGoerli"),
           method: "balanceOf",
-          parameters: [":userAddress", "1"],
+          parameters: [":userAddress", tokenId],
           returnValueTest: {
-            comparator: "=",
+            comparator: ">",
             value: "0",
           },
         },
@@ -135,14 +136,14 @@ export  const encrypt = async(tokenId:string,tokenAddress:string,walletAddress:s
 const authSig = await ethConnect.signAndSaveAuthMessage({
 web3: web3Provider,
 account: walletAddress,
-chainId: 402,
+chainId: (chain == 0 ? 420 :84531),
 expiration: new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString(),
 });
   
     const ipfsCid = await LitJsSdk.encryptToIpfs({
       authSig,
       accessControlConditions,
-      chain,
+      chain:(chain == 0 ? "optimismGoerli":"baseGoerli"),
       
        file:file, // If you want to encrypt a file instead of a string
       litNodeClient: client.litNodeClient,
@@ -155,18 +156,17 @@ expiration: new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString(),
     return ipfsCid
 }
 
-export const decrypt = async(ipfsCid:string,walletAddress:string,web3Provider:ethers.providers.Web3Provider) =>{
+export const decrypt = async(ipfsCid:string,walletAddress:string,web3Provider:ethers.providers.Web3Provider,chain:number) =>{
 
   const client = new Lit()
 
   if (!client.litNodeClient) {
       await client.connect()
     }
-    const chain = "optimismGoerli"
     const authSig = await ethConnect.signAndSaveAuthMessage({
       web3: web3Provider,
       account: walletAddress,
-      chainId: 402,
+      chainId: (chain == 0 ? 420 :84531),
       expiration: new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString(),
       });
       

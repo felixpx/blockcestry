@@ -2,7 +2,7 @@
 import { Web3AuthModalPack,Web3AuthConfig } from '@safe-global/auth-kit'
 import { MetaTransactionData, MetaTransactionOptions } from '@safe-global/safe-core-sdk-types'
 import { ethers, utils } from 'ethers'
-import { createContext, useCallback, useContext, useEffect, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useState ,useMemo } from 'react'
 
 import { CHAIN_NAMESPACES, WALLET_ADAPTERS } from '@web3auth/base'
 import { Web3AuthOptions } from '@web3auth/modal'
@@ -16,8 +16,10 @@ type accountAbstractionContextValue = {
     safes: string[]
     chain?: Chain
     isAuthenticated: boolean
-    editingEnabled:boolean
+    isEditingEnabled:boolean
     web3Provider?: ethers.providers.Web3Provider
+    
+    
     setEditingEnabled:(isEditingEnabled:boolean) =>void
     loginWeb3Auth: () => void
     logoutWeb3Auth: () => void
@@ -32,24 +34,34 @@ type accountAbstractionContextValue = {
     closeStripeWidget: () => Promise<void>
   }
 
-  const initialState = {
+  let initialState = {
+    ownerAddress:'',
     isAuthenticated: false,
-    editingEnabled:false,
+    isEditingEnabled:false,
+    web3Provider:null,
     setEditingEnabled:()=>{},
-
-    loginWeb3Auth: () => {},
+    web3ProviderUrl:"",  
+    
+        loginWeb3Auth: () => {},
     logoutWeb3Auth: () => {},
     relayTransaction: async () => {},
     setChainId: () => {},
     setSafeSelected: () => {},
     onRampWithStripe: async () => {},
     safes: [],
-    chainId: 3,
+    chainId: 0,
     isRelayerLoading: true,
     openStripeWidget: async () => {},
     closeStripeWidget: async () => {}
   }
-  const accountAbstractionContext = createContext<accountAbstractionContextValue>(initialState)
+
+
+  const storedState = localStorage.getItem('accountAbstractionState');
+  
+  if (storedState) {
+     initialState = JSON.parse(storedState);
+  }
+  const accountAbstractionContext = createContext<accountAbstractionContextValue>(initialState )
 
   const useAccountAbstraction = () => {
     const context = useContext(accountAbstractionContext)
@@ -61,24 +73,29 @@ type accountAbstractionContextValue = {
     return context
   }
 
+  
+
   const AccountAbstractionProvider = ({ children }: { children: JSX.Element }) => {
     // owner address from the email  (provided by web3Auth)
-    const [ownerAddress, setOwnerAddress] = useState<string>('')
+    const [ownerAddress, setOwnerAddress] = useState<string>(initialState.ownerAddress)
   
     // safes owned by the user
     const [safes, setSafes] = useState<string[]>([])
   
     // chain selected
-    const [chainId, setChainId] = useState<number>(0)
+    const [chainId, setChainId] = useState<number>(initialState.chainId)
     //
-    const [isEditingEnabled,setEditingEnabled] = useState(false)
+    const [isEditingEnabled,setEditingEnabled] = useState(initialState.isEditingEnabled)
+    
+    
     // web3 provider to perform signatures
     const [web3Provider, setWeb3Provider] = useState<ethers.providers.Web3Provider>()
     
-    const isAuthenticated = !!ownerAddress ///&& !!chainId
+    const [web3ProviderConnected,setWeb3ProviderConnected] = useState(false)
+    const [isAuthenticated , setIsAuthenticated] = useState(!! initialState.ownerAddress) ///&& !!chainId
     const chain = chains[chainId]
   
-    // reset React state when you switch the chain
+    /*// reset React state when you switch the chain
     useEffect(() => {
        
       setOwnerAddress('')
@@ -89,7 +106,7 @@ type accountAbstractionContextValue = {
       setWeb3Provider(undefined)
       setSafeSelected('')
     }, [chain])
-  
+  */
     // authClient
     const [web3AuthModalPack, setWeb3AuthModalPack] = useState<Web3AuthModalPack>()
   
@@ -163,8 +180,12 @@ const modalConfig = {
           console.log(chain)
           //setChainId(chains[1].id)
           setOwnerAddress(eoa)
+          setIsAuthenticated(true)
+         
           setSafes(safes || [])
-          setWeb3Provider(new ethers.providers.Web3Provider(provider))
+         const _provider =new ethers.providers.Web3Provider(provider) 
+          setWeb3Provider(_provider)
+          setWeb3ProviderConnected(true)
           setWeb3AuthModalPack(web3AuthModalPack)
         }
       } catch (error) {
@@ -176,9 +197,11 @@ const modalConfig = {
       web3AuthModalPack?.signOut()
       setEditingEnabled(false)
       setOwnerAddress('')
+      setIsAuthenticated(false)
       setSafes([])
       setChainId(1)
       setWeb3Provider(undefined)
+      setWeb3ProviderConnected(false)
       setSafeSelected('')
       setGelatoTaskId(undefined)
     }
@@ -198,7 +221,12 @@ const modalConfig = {
       setGelatoTaskId(undefined)
     }, [chainId])
   
+    useEffect(()=>{
+      console.log("Intitial State Changed")
+    },[initialState])
   
+
+    
    
     const state = {
       ownerAddress,
@@ -209,7 +237,7 @@ const modalConfig = {
       isAuthenticated,
   
       web3Provider,
-  
+      web3ProviderConnected,
       loginWeb3Auth,
       logoutWeb3Auth,
       setEditingEnabled,
@@ -218,7 +246,8 @@ const modalConfig = {
   
       
     }
-  
+    localStorage.setItem('accountAbstractionState', JSON.stringify(state));
+
     return (
       <accountAbstractionContext.Provider value={state}>
         {children}
