@@ -12,7 +12,8 @@ import Notification from "@/components/Notification/Notification";
 import { ethers } from "ethers";
 import { useAccountAbstraction } from "../../context/accountContext";
 import EnableEditButton from "./EnableEditing";
-
+import { NFTStorage } from "nft.storage";
+import { decrypt,encrypt } from "@/lit/lit";
 const TimeCapsules = [
   {
     name: "Adams Family",
@@ -33,10 +34,14 @@ const TimeCapsuleMedia = () => {
   const [openUploadMediaDialog, setOpenUploadMediaDialog] = useState(false);
   const [openShareDialog, setOpenShareDialog] = useState(false);
   const [openViewMediaDialog, setOpenViewMediaDialog] = useState(false);
-
+  const [nftstorage] = useState(
+    new NFTStorage({ token: process.env.NEXT_PUBLIC_NFT_STORAGE_API_KEY})
+  );
   const [refreshData, setRefreshData] = useState(new Date());
   const {
     isEditingEnabled,
+    ownerAddress,
+    web3Provider
     // ...other context values and functions you need
   } = useAccountAbstraction();
 
@@ -82,7 +87,29 @@ const TimeCapsuleMedia = () => {
       return;
     }
 
-    alert(getMediaCategory(_file.type));
+    try{
+      const objectData = {name:_name, description:_description,image:_nftImage,ipfsCid:"NOCID" }
+      const metadata = await nftstorage.store(objectData) 
+      console.log(metadata)
+      //console.log(metadata.data.image.href)
+     const link =metadata.data.image.href
+     const imageUrl = link.replace('ipfs://', 'https://').replace(/\/[^/]+$/, (match) => {
+      return match.replace('/', '.ipfs.dweb.link/');
+    });    
+    console.log(link)
+    console.log(imageUrl)
+      }catch(error)
+      {
+        console.log(error)
+      }
+      console.log(ethers.utils.getAddress(ownerAddress))
+      console.log(web3Provider)
+      console.log(await web3Provider.getSigner().getAddress())
+      const cid = await encrypt("1","0xD238246168278E2dE843b573f9Ff04db8c22f1aC",ownerAddress.toLowerCase(),web3Provider,_file)
+      console.log(cid)
+      const  ff = await decrypt("QmbwUFSEKNkFVU65Py223KQNvWWNZqzfexV8jg6n8npTzP",ownerAddress.toLowerCase(),web3Provider)
+      console.log(ff)
+
   };
 
   const closeUploadMediaDialog = () => {

@@ -12,8 +12,11 @@ export default function ShareDialog(props:any) {
       props.setOpen(false)
      
       const _userAdddress  =  document.getElementById("userAddress").value 
+      const selectElement = document.getElementById('familyRelation');
+      const selectedRelation = selectElement.value;
+    
 
-      props.share(_userAdddress)
+      props.share(_userAdddress,selectedRelation)
   }
   return (
     <Transition.Root show={props.open} as={Fragment}>
@@ -67,6 +70,23 @@ export default function ShareDialog(props:any) {
         className="w-full rounded-md border border-stroke bg-[#353444] py-3 px-6 text-base font-medium text-white outline-none transition-all focus:bg-[#454457] focus:shadow-input mb-2"
       />
     </div>
+    <div className="mt-1">
+    <label htmlFor="familyRelation" className="block text-base font-medium text-black mt-2 mb-2">Select a Family Relation:</label>
+      <select id="familyRelation"         className="w-full rounded-md border border-stroke bg-[#353444] py-3 px-6 text-base font-medium text-white outline-none transition-all focus:bg-[#454457] focus:shadow-input mb-2"
+>
+        <option value="">Select Relation</option>
+        <option value="Mother">Mother</option>
+        <option value="Father">Father</option>
+        <option value="Grand Father">Grand Father</option>
+        <option value="Grand Mother">Grand Mother</option>
+        <option value="Cousin">Cousin</option>
+        <option value="Aunt">Aunt</option>
+        <option value="Uncle">Uncle</option>
+        <option value="Niece">Niece</option>
+        <option value="Nephew">Nephew</option>
+        <option value="Other">Other</option>
+      </select>
+  </div>
   </div>
   
 </div>

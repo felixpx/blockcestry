@@ -1,3 +1,5 @@
+import axios from "axios";
+import { ethers } from "ethers";
 export function getMediaCategory(mimeType:string) {
     const parts = mimeType.split('/');
     if (parts.length >= 2) {
@@ -8,6 +10,101 @@ export function getMediaCategory(mimeType:string) {
     }
     return 'file';
   }
+
+
+  export async function getNFTBalances(walletAddress:string) {
+    const headers = {
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_COVALENT_API_KEY}`
+    };
+  
+    const apiUrl = `https://api.covalenthq.com/v1/eth-goerli/address/${walletAddress}/balances_nft/`;
+  
+    try {
+      const response = await axios.get(apiUrl, { headers });
+      const data = response.data;
+      return data; // Return the fetched data
+    } catch (error) {
+      console.error('Error:', error);
+      return null; // Return null in case of an error
+    }
+  }
+
+
+  export async function getNFTMetadata(contractAddress:string, tokenId:string) {
+    
+    const headers = {
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_COVALENT_API_KEY}`
+    };
+    
+    const apiUrl = `https://api.covalenthq.com/v1/eth-goerli/nft/${contractAddress}/metadata/${tokenId}/`;
+  
+    try {
+      const response = await axios.get(apiUrl, { headers });
+      const data = response.data;
+      console.log(data);
+      return data
+    } catch (error) {
+      console.error('Error:', error);
+      return null
+    }
+  }
+    
+  
+  export async function getMintedTokenURIs(
+    contractAddress: string,
+    contractABI: any[], // Use correct ABI type
+    userAddress: string,
+    provider: ethers.providers.Web3Provider
+  ): Promise<Map<number, string>> {
+    const contract = new ethers.Contract(contractAddress, contractABI, provider);
+  
+    const mintedTokenURIs = new Map();
+    let tokenId = 1;
+    console.log(tokenId)
+    console.log(provider)
+  
+    while (true) {
+      try {
+        const tokenURI = await contract.uri(tokenId);
+        // Here you might want to validate the tokenURI to ensure it's not an error message
+        if (tokenURI !== 'Family') {
+          const balance = await contract.balanceOf(userAddress, tokenId);
+          console.log(balance)
+          if (balance.gt(0)) {
+
+            const metadataurl =formatIPFSURL(tokenURI)
+             // Use Axios to fetch the token metadata
+          const response = await axios.get(metadataurl);
+          const tokenMetadata = response.data; // Assuming the response contains JSON metadata
+
+            mintedTokenURIs.set(tokenId, {tokenURI,tokenMetadata});
+          }
+        }
+  
+        // Exit the loop if tokenURI is 'Family'
+        if (tokenURI === 'Family') {
+          break;
+        }
+  
+        tokenId++;
+      } catch (error) {
+        // Handle errors, such as tokens that don't exist
+        console.log(error)
+        break; // Exit the loop if an error occurs
+      }
+    }
+  
+    return mintedTokenURIs;
+  }
+
+ export  function formatIPFSURL(url: string): string {
+    const formattedURL = url
+      .replace('ipfs://', 'https://')
+      .replace(/\/[^/]+$/, (match: string) => match.replace('/', '.ipfs.dweb.link/'));
+  
+    return formattedURL;
+  }
+  
   
 export const  countryList = 
 

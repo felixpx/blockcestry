@@ -108,17 +108,17 @@ const authSig = await ethConnect.signAndSaveAuthMessage({
   }
 
 
-export  const encrypt = async(tokenId:string,tokenAddress:string,walletAddress:string,web3Provider:ethers.providers.Web3Provider,file:any)=> {
+export  const encrypt = async(tokenId:string,tokenAddress:string,walletAddress:string,web3Provider:ethers.providers.Web3Provider,file:any,chain:string)=> {
 
     const accessControlConditions = [
       {
           contractAddress: tokenAddress,
           standardContractType: "ERC1155",
-          chain: "optemismGoerli",
+          chain: "optimismGoerli",
           method: "balanceOf",
-          parameters: [":userAddress", tokenId],
+          parameters: [":userAddress", "1"],
           returnValueTest: {
-            comparator: ">",
+            comparator: "=",
             value: "0",
           },
         },
@@ -130,14 +130,13 @@ export  const encrypt = async(tokenId:string,tokenAddress:string,walletAddress:s
     if (!client.litNodeClient) {
         await client.connect()
       }
-      const chain = "ethereum"
+      const chain = "optimismGoerli"
      
-  //const authSig = await LitJsSdk.checkAndSignAuthMessage({ chain: "ethereum" });
-
+  
 const authSig = await ethConnect.signAndSaveAuthMessage({
 web3: web3Provider,
 account: walletAddress,
-chainId: 1,
+chainId: 402,
 expiration: new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString(),
 });
   
@@ -148,9 +147,13 @@ expiration: new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString(),
       
        file:file, // If you want to encrypt a file instead of a string
       litNodeClient: client.litNodeClient,
-      infuraId: 'YOUR INFURA PROJECT ID',
-      infuraSecretKey: 'YOUR INFURA API-SECRET-KEY',
+      infuraId: process.env.NEXT_PUBLIC_INFURA_API_KEY
+      ,
+      infuraSecretKey: process.env.NEXT_PUBLIC_INFURA_API_SECRET
+      ,
     });
+
+    return ipfsCid
 }
 
 export const decrypt = async(ipfsCid:string,walletAddress:string,web3Provider:ethers.providers.Web3Provider) =>{
@@ -160,11 +163,11 @@ export const decrypt = async(ipfsCid:string,walletAddress:string,web3Provider:et
   if (!client.litNodeClient) {
       await client.connect()
     }
-    const chain = "ethereum"
+    const chain = "optimismGoerli"
     const authSig = await ethConnect.signAndSaveAuthMessage({
       web3: web3Provider,
       account: walletAddress,
-      chainId: 1,
+      chainId: 402,
       expiration: new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString(),
       });
       
@@ -173,4 +176,6 @@ export const decrypt = async(ipfsCid:string,walletAddress:string,web3Provider:et
       ipfsCid, // This is returned from the above encryption
       litNodeClient: client.litNodeClient,
     });
+
+    return decryptedFile
 }
