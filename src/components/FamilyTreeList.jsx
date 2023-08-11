@@ -243,7 +243,7 @@ console.log(imageUrl)
            console.log(data)
            let _trees = []
            for (const [key, value] of data.entries()) {
-            _trees.push({name:value.tokenMetadata.name,description:value.tokenMetadata.description,nftId:key,image:formatIPFSURL( value.tokenMetadata.image)})
+            _trees.push({name:value.tokenMetadata.name,description:value.tokenMetadata.description,nftId:key,image:formatIPFSURL( value.tokenMetadata.image),ipfsCid:value.tokenMetadata.ipfsCid})
           }
           setFamilyTrees(_trees)
           console.log(_trees)

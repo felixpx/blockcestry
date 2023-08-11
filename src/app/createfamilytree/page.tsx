@@ -10,11 +10,14 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { useAccountAbstraction } from '../../../context/accountContext';
 import EnableEditButton from "../../components/EnableEditing";
-import { useRouter } from "next/navigation";
+import { useRouter,useSearchParams  } from "next/navigation";
 import { NFTStorage } from "nft.storage";
 import Notification from "@/components/Notification/Notification";
 
-export default function CreateFamilyTree() {
+export default function CreateFamilyTree() 
+ {
+  const searchParams = useSearchParams()
+  const [familyObject,setFamilyObject] = useState()
   const divRef = useRef();
   const imageRef = useRef()
   const fileInputRef = useRef(null);
@@ -71,9 +74,7 @@ const close = async () => {
       }
     }
   
-  const [nodes,setNodes] = useState( [
-    { id: 3, pids: [1, 2], gender: 'female', photo: '', name: 'Your Name', born: '1943-01-13', email: '', phone: '', city: '', country: 'TT' },
-   ]
+  const [nodes,setNodes] = useState( [  ]
 )
   const  [familyTree,setFamilyTree] = useState()
   useEffect(() => {
@@ -151,6 +152,23 @@ const close = async () => {
   const handleButtonClick = () => {
     fileInputRef.current.click();
   };
+
+  useEffect(()=>{
+    if(familyObject)
+    {
+         console.log(familyObject)
+       if(familyObject.ipfsCid == "NOCID")
+         setNodes(
+         [ { id: 3, pids: [1, 2], gender: 'female', photo: '', name: 'Your Name', born: '1943-01-13', email: '', phone: '', city: '', country: 'TT' },
+          ] )
+    }
+  },[familyObject])
+  
+  useEffect(()=>{
+    setFamilyObject(JSON.parse( searchParams.get('q')))
+    console.log(searchParams.get('q'))
+
+  },[])
   return (
     <main className="">
       {/* <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
@@ -174,7 +192,7 @@ Family Tree
     <div className="border-t border-white/10 bg-gray-700 pt-11 ">
     {!isEditingEnabled && <EnableEditButton />}
     <button 
-        onClick={()=>    router.push(`/viewtimecapsule/${1}`)
+        onClick={()=>    router.push(`/viewtimecapsule/${1}?q=${JSON.stringify(familyObject)}`)
       }
         className="ml-2 p-2 mb-5 inline-flex items-center justify-center rounded-md border-2 border-primary bg-primary px-5 text-base font-semibold text-white transition-all hover:text-teal-500 hover:border-teal-500">
         Time Capsule

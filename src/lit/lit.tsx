@@ -130,7 +130,6 @@ export  const encrypt = async(tokenId:string,tokenAddress:string,walletAddress:s
     if (!client.litNodeClient) {
         await client.connect()
       }
-      const chain = "optimismGoerli"
      
   
 const authSig = await ethConnect.signAndSaveAuthMessage({
