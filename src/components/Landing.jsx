@@ -61,7 +61,7 @@ export default function Example() {
               </h1>
               <p className="mt-6 text-lg leading-8 text-gray-300">
                 In addition to providing a secure and decentralized platform for
-                creating and managing family trees, "BlockCestry" also supports
+                creating and managing family trees, &quot;BlockCestry&quot; also supports
                 the inclusion of media files to enrich the family history
                 experience.
               </p>

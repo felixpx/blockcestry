@@ -131,7 +131,7 @@ export default function UploadMediaDialog(props:any) {
 <div className="mt-2">
 
 {filetype == 1 && <video controls width="600">
-    <source src={mediaUrl.current} />    <p>Your browser doesn't support HTML5 video.</p>
+    <source src={mediaUrl.current} />    <p>Your browser doesn&quot;t support HTML5 video.</p>
   </video>} {filetype == 2 && <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg sm:aspect-h-3 sm:aspect-w-2">
                 <img 
                      
