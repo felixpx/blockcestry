@@ -69,7 +69,7 @@ export default function Header() {
                 <div className="flex flex-shrink-0 items-center">
                   <img
                     className="h-8 w-auto"
-                    src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                    src="/BC-logo-white.png"
                     alt="Your Company"
                   />
                 </div>
