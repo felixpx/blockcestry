@@ -346,7 +346,7 @@ const FamilyTreeList = () => {
                         `/createfamilytree?q=${JSON.stringify(object)}`
                       )
                     }
-                    src={object.image}
+                    src={formatIPFSURL( object.image)}
                     alt="Image"
                     className="cursor-pointer h-[300px] w-full object-cover object-center group-hover:opacity-75"
                   />
