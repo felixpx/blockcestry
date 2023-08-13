@@ -1,3 +1,4 @@
+'use client'
 import Image from "next/image";
 import CreateFamTreeBase from "../../components/CreateFamTreeBase";
 import "@fortawesome/fontawesome-svg-core/styles.css";
