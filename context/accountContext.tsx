@@ -55,7 +55,7 @@ type accountAbstractionContextValue = {
     closeStripeWidget: async () => {}
   }
 
-  if(localStorage != undefined)
+  if (typeof yourVariable !== 'undefined') 
   {
   const storedState = localStorage.getItem('accountAbstractionState');
   
@@ -249,8 +249,8 @@ const modalConfig = {
       
     }
 
-    if(localStorage != undefined)
-    localStorage.setItem('accountAbstractionState', JSON.stringify(state));
+    if (typeof yourVariable !== 'undefined') 
+      localStorage.setItem('accountAbstractionState', JSON.stringify(state));
 
     return (
       <accountAbstractionContext.Provider value={state}>
