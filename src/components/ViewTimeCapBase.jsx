@@ -1,6 +1,18 @@
+'use client'
 import Header from "./Header";
 import TimeCapsuleMedia from "./TimeCapsuleMedia";
+import { useRouter, useSearchParams } from "next/navigation";
+import {useEffect,useState,} from 'react'
 export default function FamilyTree3() {
+  const searchParams = useSearchParams();
+  const [familyObject, setFamilyObject] = useState();
+
+  useEffect(() => {
+    setFamilyObject(JSON.parse(searchParams.get("q")));
+    //console.log(searchParams.get("q"));
+    //loginWeb3Auth();
+  }, []);
+  
   return (
     <div className="bg-gray-900 w-full">
       <Header title={"dash"} />
@@ -48,12 +60,15 @@ export default function FamilyTree3() {
         </div>
 
         <div className="mx-auto max-w-7xl px-6 flex flex-col justify-center items-center pb-12 pt-10 sm:pb-16 lg:flex lg:px-8 lg:pt-16">
-          <div className="mx-auto max-w-2xl flex-shrink-0 lg:mx-0 lg:max-w-xl lg:pt-4">
-            <div className="text-2xl lg:mb-16 font-bold tracking-tight text-white sm:text-4xl">
+          <div className="mx-auto max-w-2xl flex-shrink-0 lg:mx-0 lg:max-w-xl lg:pt-4 text-center">
+          <p className="text-base font-semibold leading-7 text-indigo-600">{familyObject?.name}</p>
+
+            <div className="text-2xl lg:mb-6 font-bold tracking-tight text-white sm:text-4xl">
               Time Capsule
             </div>
+           
           </div>
-          <div className="mx-auto flex-col w-full mt-16 flex items-center justify-center">
+          <div className="mx-auto flex-col w-full mt-6 flex items-center justify-center">
             <div className="max-w-3xl mb-48 flex-none sm:max-w-5xl lg:max-w-none">
               <TimeCapsuleMedia />
             </div>

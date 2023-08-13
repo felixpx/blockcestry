@@ -2,7 +2,7 @@
 import Image from "next/image";
 // import Header2 from "../../components/Header2";
 import React, { useEffect, useRef, useState } from "react";
-import FamilyTree from "../../src/components/familytree/familytree";
+import FamilyTree,{convertNodesToCsv,convertCsvToNodes} from "../../src/components/familytree/familytree";
 import { countryList } from "../../utils/utils";
 import { faPeopleGroup } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,7 +13,7 @@ import EnableEditButton from "../../src/components/EnableEditing";
 import { useRouter, useSearchParams } from "next/navigation";
 import { NFTStorage } from "nft.storage";
 import Notification from "@/components/Notification/Notification";
-import { formatIPFSURL } from "../../utils/utils";
+import { formatIPFSURL,fetchJsonFromIpfs } from "../../utils/utils";
 import { Web3Storage, File } from "web3.storage";
 import { familyTokenAddress, familyTokenABI } from "@/components/Contracts";
 import { ethers } from "ethers";
@@ -161,10 +161,12 @@ export default function CreateFamilyTree() {
   }, [nodes]);
 
   const saveFamilyTree = async () => {
-    console.log(familyTree?.nodes);
-    console.log(nodes);
+    console.log(familyTree.nodes);
+    
+   // console.log(nodes);
+    //return
     const _cid = await storage.put([
-      new File([JSON.stringify(familyTree?.nodes)], "family.json"),
+      new File([convertNodesToCsv(familyTree.nodes)], "family.json"),
     ]);
     console.log(_cid);
     familyObject.ipfsCid = _cid;
@@ -222,6 +224,8 @@ export default function CreateFamilyTree() {
   };
 
   useEffect(() => {
+    async function getTree()
+    { 
     if (familyObject) {
       console.log(familyObject);
       if (familyObject.ipfsCid == "NOCID")
@@ -239,7 +243,17 @@ export default function CreateFamilyTree() {
             country: "TT",
           },
         ]);
+        else{
+              const _nodes = await fetchJsonFromIpfs(familyObject.ipfsCid)
+              console.log(_nodes)
+              //setNodes(convertCsvToNodes(_nodes))
+              familyTree.Nodes =convertCsvToNodes(_nodes)
+  
+        }
     }
+  }
+  if(familyObject)
+   getTree()
   }, [familyObject]);
 
   useEffect(() => {

@@ -101,11 +101,7 @@ const FamilyTreeList = () => {
       console.log(metadata);
       //console.log(metadata.data.image.href)
       const link = metadata.data.image.href;
-      const imageUrl = link
-        .replace("ipfs://", "https://")
-        .replace(/\/[^/]+$/, (match) => {
-          return match.replace("/", ".ipfs.dweb.link/");
-        });
+      const imageUrl = formatIPFSURL(link)
       console.log(link);
       console.log(imageUrl);
     } catch (error) {
@@ -156,7 +152,7 @@ const FamilyTreeList = () => {
   };
 
   const shareFamilyTree = async (_userAddress, relation, _familyId) => {
-    alert(familyId.current);
+    
 
     if (!ethers.utils.isAddress(_userAddress)) {
       setDialogType(2); //Error
@@ -220,6 +216,55 @@ const FamilyTreeList = () => {
     }
   };
 
+  const transferToken = async (tokenId)=>{
+
+    const myFamilyContract = new ethers.Contract(
+      myFamilyContractAddress.get(chainId),
+      myFamilyContractABI,
+      web3Provider?.getSigner()
+    );
+
+    const familyTokenContract = new ethers.Contract(familyTokenAddress.get(chainId),familyTokenABI,web3Provider?.getSigner())
+    console.log(myFamilyContract);
+
+    try {
+
+      let tx1 = await familyTokenContract.callStatic.setApprovalForAll(myFamilyContractAddress.get(chainId),true)
+      let tx2 = await familyTokenContract.setApprovalForAll(myFamilyContractAddress.get(chainId),true)
+      await tx2.wait()
+      const _chain=  (chainId==0 ? 10160 : 10132)
+      let fee = ethers.utils.parseEther(".001")
+
+      let tx3 = await myFamilyContract.callStatic.sendTokens(_chain,tokenId,ownerAddress,1,{value:fee})
+      let tx4 = await myFamilyContract.sendTokens(_chain,tokenId,ownerAddress,1,{value:fee})
+      await tx4.wait();
+
+      setDialogType(1); //Success
+      setNotificationTitle("Transfer Family Tree");
+      setNotificationDescription("Family Tree token sent successfully.");
+      setShow(true);
+      setRefreshData(new Date());
+    } catch (error) {
+      if (error.code === "TRANSACTION_REVERTED") {
+        console.log("Transaction reverted");
+        // let revertReason = ethers.utils.parseRevertReason(error.data);
+        setNotificationDescription("Reverted");
+      } else if (error.code === "ACTION_REJECTED") {
+        setNotificationDescription("Transaction rejected by user");
+      } else {
+        console.log(error);
+        //const errorMessage = ethers.utils.revert(error.reason);
+        setNotificationDescription(
+          `Transaction failed with error: ${error.reason}`
+        );
+      }
+      setDialogType(2); //Error
+      setNotificationTitle("Transfer Family Tree");
+
+      setShow(true);
+    }
+
+  }
   const closeNFTDataDialog = () => {
     setOpenNFTDataDialog(false);
   };
@@ -236,7 +281,7 @@ const FamilyTreeList = () => {
   useEffect(() => {
     async function getFamilyTrees() {
       if (ownerAddress) {
-        if (chainId == 0) {
+        if (chainId == -1) {
           const data = await getNFTBalances(ownerAddress);
           console.log(data);
         } else {
@@ -260,7 +305,7 @@ const FamilyTreeList = () => {
               name: value.tokenMetadata.name,
               description: value.tokenMetadata.description,
               nftId: key,
-              image: formatIPFSURL(value.tokenMetadata.image),
+              image: value.tokenMetadata.image,
               ipfsCid: value.tokenMetadata.ipfsCid,
             });
           }
@@ -327,6 +372,16 @@ const FamilyTreeList = () => {
                     Share
                   </button>
                 </div>
+              {(chainId ==0 || chainId == 1 ) &&  <div className="mt-2 flex items-center justify-between text-base font-medium text-white">
+                <button
+                    onClick={() =>
+                     transferToken(object.nftId)
+                    }
+                    className="w-full mb-5 inline-flex items-center justify-center rounded-md border-2 border-primary bg-primary px-5 text-base font-semibold text-white transition-all hover:text-indigo-500 hover:border-indigo-500"
+                  >
+                    Transfer Token to {chainId == 0  ? "Base" :"Optimism"}
+                  </button>
+                 </div>}
               </div>
             ))}
           </div>

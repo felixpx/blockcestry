@@ -17,12 +17,24 @@ export function getMediaCategory(mimeType:string) {
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_COVALENT_API_KEY}`
     };
   
-    const apiUrl = `https://api.covalenthq.com/v1/eth-goerli/address/${walletAddress}/balances_nft/`;
+    const apiUrl = `https://api.covalenthq.com/v1/optimism-goerli/address/${walletAddress}/balances_nft/?with-uncached=true`;
   
     try {
-      const response = await axios.get(apiUrl, { headers });
-      const data = response.data;
-      return data; // Return the fetched data
+      const response = await fetch(apiUrl,  {method: 'GET', headers: headers});
+      const data = await response.json();
+      const mintedTokenURIs = new Map();
+      console.log(data)
+      const items = data.items;      
+      for (const index in items)
+      {
+          
+                         
+           mintedTokenURIs.set(items[index].nft_data[0].token_id, {nftId:items[index].nft_data[0].token_id,image:items[index].nft_data[0].external_data.image,name:items[index].nft_data[0].external_data.name,description:items[index].nft_data[0].external_data.description,ipfsCid:items[index].nft_data[0].external_data?.ipfsCid})   
+         
+         
+      }
+
+      return mintedTokenURIs; // Return the fetched data
     } catch (error) {
       console.error('Error:', error);
       return null; // Return null in case of an error
@@ -49,7 +61,87 @@ export function getMediaCategory(mimeType:string) {
     }
   }
     
+  export async function getFamilyAssets(familyId:number, contractAddress: string,
+    contractABI: any[], // Use correct ABI type
+    provider: ethers.providers.Web3Provider
+ )
+  {
+    let  familyAssets:any = [];
+ 
+    const contract = new ethers.Contract(contractAddress, contractABI, provider);
+    let index = 0
+    try {
+      while (true) {
+          const assetId = await contract.assetFamilyMapping(familyId, index++);
+         familyAssets.push(assetId.toNumber())
+       }
+  } catch (error) {
+      console.error('Error:', error);
+  }
+    return familyAssets
+  }
+
+  export async function getTokenMetadata(mapping:any[],  contractAddress:string,contractABI:any[], provider:ethers.providers.Web3Provider) {
+    const contract = new ethers.Contract(contractAddress, contractABI, provider);
+    const tokenMetadataMapping =  new Map();
+
+    for (const tokenId in mapping) {
+        try {
+            const tokenURI = await contract.tokenURI(mapping[tokenId]);
+            const response = await axios.get(formatIPFSURL( tokenURI));
+
+            if (response.data) {
+                tokenMetadataMapping.set(tokenId,response.data);
+            } else {
+                console.error(`No metadata found for tokenId ${tokenId}`);
+            }
+        } catch (error) {
+            console.error(`Error fetching metadata for tokenId ${tokenId}:`, error);
+        }
+    }
+
+    return tokenMetadataMapping;
+}
+export async function fetchIPFSFile(cid:string) {
+  const ipfsGateway = 'https://ipfs.io/ipfs/';
+
+  const url = `${ipfsGateway}${cid}`;
   
+  try {
+    const response = await fetch(url);
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch IPFS file');
+    }
+    
+    const blob = await response.blob();
+    
+    // Now you have the file content as a Blob object
+    return blob;
+  } catch (error) {
+    console.error('Error fetching IPFS file:', error);
+    throw error;
+  }
+}
+
+
+export function getFileTypeByFilename(fileName:string) {
+  const imageExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+  const videoExtensions = ['mp4', 'avi', 'mov', 'mkv'];
+
+  const fileExtension = fileName.split('.').pop().toLowerCase();
+
+  if (imageExtensions.includes(fileExtension)) {
+    return 2; // Image
+  } else if (videoExtensions.includes(fileExtension)) {
+    return 1; // Video
+  } else {
+    return 3; // Other
+  }
+}
+
+
+
   export async function getMintedTokenURIs(
     contractAddress: string,
     contractABI: any[], // Use correct ABI type
@@ -73,6 +165,7 @@ export function getMediaCategory(mimeType:string) {
           if (balance.gt(0)) {
 
             const metadataurl =formatIPFSURL(tokenURI)
+            console.log(metadataurl)
              // Use Axios to fetch the token metadata
           const response = await axios.get(metadataurl);
           const tokenMetadata = response.data; // Assuming the response contains JSON metadata
@@ -100,9 +193,23 @@ export function getMediaCategory(mimeType:string) {
  export  function formatIPFSURL(url: string): string {
     const formattedURL = url
       .replace('ipfs://', 'https://')
-      .replace(/\/[^/]+$/, (match: string) => match.replace('/', '.ipfs.dweb.link/'));
+      .replace(/\/[^/]+$/, (match: string) => match.replace('/', '.ipfs.w3s.link/'));
   
     return formattedURL;
+  }
+  
+
+  export async function fetchJsonFromIpfs(cid:string) {
+    try {
+      const url = `https://ipfs.io/ipfs/${cid}/family.json`; // IPFS gateway URL
+      const response = await axios.get(url);
+      const jsonData = response.data;
+  
+      return jsonData;
+    } catch (error) {
+      console.error('Error:', error);
+      throw error;
+    }
   }
   
   

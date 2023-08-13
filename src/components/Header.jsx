@@ -84,24 +84,19 @@ export default function Header() {
                     Home
                   </a>
                   <a
-                    href="familytree"
+                    href="/familytree"
                     onClick={setFam}
                     className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-400 hover:border-gray-300 hover:text-gray-100"
                   >
                     Familytree
                   </a>
                   <a
-                    href="profile"
+                    href="/profile"
                     className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-400 hover:border-gray-300 hover:text-gray-100"
                   >
                     Profile
                   </a>
-                  <a
-                    href="timecapsule"
-                    className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-400 hover:border-gray-300 hover:text-gray-100"
-                  >
-                    Time Capsule
-                  </a>
+                 
                 </div>
               </div>
               <div className="flex justify-between items-center">

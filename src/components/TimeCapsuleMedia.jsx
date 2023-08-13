@@ -2,10 +2,9 @@
 // components/TimeCapsule.js
 import React from "react";
 import "../styles/family-tree.css";
-import { useRouter } from "next/navigation";
 import UploadMediaDialog from "./UploadMediaDialog";
 import ViewMediaDialog from "./ViewMediaDialog";
-import { getMediaCategory } from "../../utils/utils";
+import { getMediaCategory,getFamilyAssets,getTokenMetadata, formatIPFSURL } from "../../utils/utils";
 import ShareDialog from "./ShareDialog";
 import { useState,useEffect } from "react";
 import Notification from "@/components/Notification/Notification";
@@ -13,8 +12,9 @@ import { ethers } from "ethers";
 import { useAccountAbstraction } from "../../context/accountContext";
 import EnableEditButton from "./EnableEditing";
 import { NFTStorage } from "nft.storage";
-import { decrypt,encrypt } from "@/lit/lit";
 import { Web3Storage, File } from "web3.storage";
+import { myFamilyAssetsContractABI,myFamilyAssetsContractAddress, myFamilyContractABI,myFamilyContractAddress } from "./Contracts";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const TimeCapsules = [
   {
@@ -33,6 +33,10 @@ const TimeCapsules = [
 
 const TimeCapsuleMedia = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const [media,setMedia] = useState()
+  const [familyObject, setFamilyObject] = useState();
+  const [familyAssets,setFamilyAssets] = useState([])
   const [openUploadMediaDialog, setOpenUploadMediaDialog] = useState(false);
   const [openShareDialog, setOpenShareDialog] = useState(false);
   const [openViewMediaDialog, setOpenViewMediaDialog] = useState(false);
@@ -103,28 +107,50 @@ const TimeCapsuleMedia = () => {
        console.log(_cid)
        const objectData = {name:_name, description:_description,image:_nftImage,ipfsCid:_cid }
        const metadata = await nftstorage.store(objectData) 
-       console.log(metadata)
-       //console.log(metadata.data.image.href)
-     /* const link =metadata.data.image.href
-      const imageUrl = link.replace('ipfs://', 'https://').replace(/\/[^/]+$/, (match) => {
-       return match.replace('/', '.ipfs.dweb.link/');
-     });    
-     console.log(link)
-     console.log(imageUrl)
-      */
+       console.log(metadata.url)
+       const myFamilyContract = new ethers.Contract(
+        myFamilyContractAddress.get(chainId),
+        myFamilyContractABI,
+        web3Provider?.getSigner()
+      );
+      console.log(myFamilyContract);
+  
+        let tx1 = await myFamilyContract.callStatic.addAsset(
+          familyObject.nftId,
+          metadata.url
+        );
+        let tx2 = await myFamilyContract.addAsset(
+          familyObject.nftId,
+          metadata.url
+        );
+        await tx2.wait();
+  
+        setDialogType(1); //Success
+        setNotificationTitle("Upload Family Media");
+        setNotificationDescription("Media uploaded successfully.");
+        setShow(true);
+        setRefreshData(new Date());
+      } catch (error) {
+        if (error.code === "TRANSACTION_REVERTED") {
+          console.log("Transaction reverted");
+          // let revertReason = ethers.utils.parseRevertReason(error.data);
+          setNotificationDescription("Reverted");
+        } else if (error.code === "ACTION_REJECTED") {
+          setNotificationDescription("Transaction rejected by user");
+        } else {
+          console.log(error);
+          //const errorMessage = ethers.utils.revert(error.reason);
+          setNotificationDescription(
+            `Transaction failed with error: ${error.reason}`
+          );
+        }
+        setDialogType(2); //Error
+        setNotificationTitle("Upload Family Media");
+  
+        setShow(true);
+      } 
      
-      }catch(error)
-      {
-        console.log(error)
-      }
-     /* console.log(ethers.utils.getAddress(ownerAddress))
-      console.log(web3Provider)
-      console.log(await web3Provider.getSigner().getAddress())
-      const cid = await encrypt("1","0x564a4aC7716F9c5540E0afE163391146e99AA10d",ownerAddress.toLowerCase(),web3Provider,_file,chainId)
-      console.log(cid)
-      const  ff = await decrypt(cid,ownerAddress.toLowerCase(),web3Provider,chainId)
-      console.log(ff)
-*/
+     
   };
 
   const closeUploadMediaDialog = () => {
@@ -149,9 +175,38 @@ const TimeCapsuleMedia = () => {
     setOpenShareDialog(false);
   };
 
+  useEffect(() => {
+    setFamilyObject(JSON.parse(searchParams.get("q")));
+    console.log(searchParams.get("q"));
+    loginWeb3Auth();
+  }, []);
+
+  const viewMedia  = (object)=>{
+     setOpenViewMediaDialog(true)
+     setMedia(object)
+    }
   useEffect(()=>{
-    loginWeb3Auth()
- },[])
+      async function getAssets()
+      {
+         const _assets = await getFamilyAssets(familyObject.nftId,myFamilyContractAddress.get(chainId),myFamilyContractABI,web3Provider)  
+         console.log(_assets) 
+         const _data = await getTokenMetadata(_assets,myFamilyAssetsContractAddress.get(chainId),myFamilyAssetsContractABI,web3Provider)
+         console.log(_data)
+         let fa = []
+         for (const [key, value] of _data.entries()) {
+          fa.push({
+            name: value.name,
+            description: value.description,
+            nftId: key,
+            image: formatIPFSURL( value.image),
+            ipfsCid: value.ipfsCid,
+          });
+        }
+          setFamilyAssets(fa)
+        }
+    if(web3ProviderConnected && familyObject)
+      getAssets()
+  },[web3ProviderConnected,familyObject,refreshData])
   return (
     <section className="overflow-x-auto flex items-center justify-center mt-2 w-full ">
       <div className=" bg-tarnsparent pt-11">
@@ -167,11 +222,11 @@ const TimeCapsuleMedia = () => {
         )}
         <div className="m-4 mb-12 ">
           <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
-            {TimeCapsules.map((object, index) => (
+            {familyAssets.map((object, index) => (
               <div key={object.tokenId}>
                 <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg sm:aspect-h-3 sm:aspect-w-2">
+                  
                   <img
-                    onClick={() => router.push(`/webinar/${object.tokenId}`)}
                     src={object.image}
                     alt="Image"
                     className="cursor-pointer h-[300px] w-full object-cover object-center group-hover:opacity-75"
@@ -182,7 +237,7 @@ const TimeCapsuleMedia = () => {
                 </div>
                 <div className="mt-1 flex items-center justify-between text-base font-medium text-white">
                   <button
-                    onClick={() => setOpenViewMediaDialog(true)}
+                    onClick={() => viewMedia(object)}
                     className="mb-5 inline-flex items-center justify-center rounded-md border-2 border-primary bg-primary px-5 text-base font-semibold text-white transition-all hover:text-teal-500 hover:border-teal-500"
                   >
                     View
@@ -204,7 +259,7 @@ const TimeCapsuleMedia = () => {
         open={openViewMediaDialog}
         setOpen={closeViewMediaDialog}
         refreshData={refreshData}
-        type={2}
+        media={media}
       />
 
       <ShareDialog
