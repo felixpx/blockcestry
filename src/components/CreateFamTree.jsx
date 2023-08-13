@@ -247,7 +247,7 @@ export default function CreateFamilyTree() {
               const _nodes = await fetchJsonFromIpfs(familyObject.ipfsCid)
               console.log(_nodes)
               //setNodes(convertCsvToNodes(_nodes))
-              familyTree.Nodes =convertCsvToNodes(_nodes)
+              familyTree.Nodes =[convertCsvToNodes(_nodes)]
   
         }
     }
